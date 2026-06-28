@@ -1,0 +1,127 @@
+<view class="container">
+  <view class="health-header">
+    <view class="back-btn" bindtap="goBack">
+      <text class="back-icon">←</text>
+    </view>
+    <view class="header-title">健康监测</view>
+    <view class="placeholder"></view>
+  </view>
+
+  <view class="current-health">
+    <view class="health-card">
+      <view class="health-item heart-rate">
+        <view class="item-icon">❤</view>
+        <view class="item-content">
+          <view class="item-value">{{currentData.heartRate}}</view>
+          <view class="item-unit">bpm</view>
+        </view>
+        <view class="item-label">心率</view>
+        <view class="item-status {{getHeartRateStatus(currentData.heartRate)}}">
+          {{getHeartRateStatusText(currentData.heartRate)}}
+        </view>
+      </view>
+      
+      <view class="health-item temperature">
+        <view class="item-icon">🌡</view>
+        <view class="item-content">
+          <view class="item-value">{{currentData.temperature}}</view>
+          <view class="item-unit">°C</view>
+        </view>
+        <view class="item-label">体温</view>
+        <view class="item-status {{getTemperatureStatus(currentData.temperature)}}">
+          {{getTemperatureStatusText(currentData.temperature)}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="chart-section">
+    <view class="section-header">
+      <text class="section-title">心率趋势</text>
+      <view class="time-tabs">
+        <view 
+          class="time-tab {{chartTime === 'day' ? 'active' : ''}}" 
+          bindtap="setChartTime" 
+          data-time="day"
+        >今日</view>
+        <view 
+          class="time-tab {{chartTime === 'week' ? 'active' : ''}}" 
+          bindtap="setChartTime" 
+          data-time="week"
+        >本周</view>
+        <view 
+          class="time-tab {{chartTime === 'month' ? 'active' : ''}}" 
+          bindtap="setChartTime" 
+          data-time="month"
+        >本月</view>
+      </view>
+    </view>
+    
+    <view class="chart-card">
+      <view class="chart-container">
+        <view class="chart-y-axis">
+          <text class="y-label">120</text>
+          <text class="y-label">100</text>
+          <text class="y-label">80</text>
+          <text class="y-label">60</text>
+          <text class="y-label">40</text>
+        </view>
+        <view class="chart-area">
+          <view class="chart-grid">
+            <view class="grid-line" wx:for="5" wx:key="index"></view>
+          </view>
+          <view class="chart-line">
+            <view 
+              class="data-point" 
+              wx:for="{{heartRateData}}" 
+              wx:key="index"
+              style="left: {{item.x}}%; bottom: {{item.y}}%;"
+            ></view>
+            <svg class="line-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <path :d="linePath" fill="none" stroke="#1E90FF" stroke-width="0.5"/>
+              <path :d="areaPath" fill="url(#gradient)"/>
+              <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#1E90FF" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#1E90FF" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </view>
+          <view class="chart-x-axis">
+            <text class="x-label" wx:for="{{chartLabels}}" wx:key="index">{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="heat-warning" wx:if="showHeatWarning">
+    <view class="warning-icon">🔥</view>
+    <view class="warning-content">
+      <view class="warning-title">中暑预警</view>
+      <view class="warning-desc">当前体温偏高，请注意防暑降温</view>
+    </view>
+    <view class="warning-action" bindtap="dismissHeatWarning">知道了</view>
+  </view>
+
+  <view class="history-section">
+    <view class="section-header">
+      <text class="section-title">健康记录</text>
+      <text class="section-more">查看全部 →</text>
+    </view>
+    
+    <view class="history-list">
+      <view class="history-item" wx:for="{{historyList}}" wx:key="id">
+        <view class="history-time">{{item.time}}</view>
+        <view class="history-data">
+          <text class="history-heart">心率: {{item.heartRate}}bpm</text>
+          <text class="history-temp">体温: {{item.temperature}}°C</text>
+        </view>
+        <view class="history-status" style="color: {{item.status === 'normal' ? '#32CD32' : '#FF8C00'}}">
+          {{item.status === 'normal' ? '正常' : '异常'}}
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

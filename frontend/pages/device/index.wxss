@@ -1,0 +1,359 @@
+.container {
+  min-height: 100vh;
+  background: #F5F5F5;
+  padding-bottom: 120rpx;
+}
+
+.device-header {
+  position: relative;
+  padding: 60rpx 30rpx 40rpx;
+}
+
+.header-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 300rpx;
+  background: linear-gradient(135deg, #1E90FF 0%, #00BFFF 100%);
+  border-radius: 0 0 40rpx 40rpx;
+}
+
+.header-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.device-icon-wrap {
+  position: relative;
+  width: 160rpx;
+  height: 160rpx;
+  margin: 0 auto 20rpx;
+}
+
+.device-main-icon {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 6rpx solid rgba(255, 255, 255, 0.5);
+}
+
+.connection-status {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+}
+
+.connection-status.connected .status-dot {
+  background: #32CD32;
+}
+
+.connection-status.disconnected .status-dot {
+  background: #DC143C;
+}
+
+.status-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+}
+
+.status-text {
+  font-size: 22rpx;
+  color: #FFFFFF;
+}
+
+.device-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #FFFFFF;
+  margin-bottom: 8rpx;
+}
+
+.device-subtitle {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.device-info-card {
+  margin: -20rpx 20rpx 20rpx;
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 25rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15rpx 0;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+.info-value {
+  font-size: 26rpx;
+  color: #333333;
+  font-weight: bold;
+}
+
+.battery-card {
+  margin: 0 20rpx 20rpx;
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 25rpx;
+}
+
+.battery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15rpx;
+}
+
+.battery-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333333;
+}
+
+.battery-percent {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1E90FF;
+}
+
+.battery-bar-large {
+  height: 24rpx;
+  background: #F0F0F0;
+  border-radius: 12rpx;
+  overflow: hidden;
+  margin-bottom: 15rpx;
+}
+
+.battery-fill-large {
+  height: 100%;
+  border-radius: 12rpx;
+  transition: width 0.3s ease;
+}
+
+.battery-info {
+  text-align: center;
+}
+
+.battery-text {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.control-section {
+  padding: 0 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 20rpx;
+}
+
+.control-card {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 25rpx;
+  margin-bottom: 15rpx;
+}
+
+.control-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.control-label {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333333;
+}
+
+.control-switch {
+  transform: scale(0.8);
+}
+
+.led-modes {
+  display: flex;
+  justify-content: space-around;
+}
+
+.mode-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10rpx;
+  padding: 20rpx 30rpx;
+  background: #F5F5F5;
+  border-radius: 12rpx;
+  transition: all 0.3s ease;
+}
+
+.mode-item.active {
+  background: #E8F4FC;
+  border: 2rpx solid #1E90FF;
+}
+
+.mode-icon {
+  font-size: 36rpx;
+  color: #999999;
+}
+
+.mode-icon.blink {
+  animation: blink 1s infinite;
+  color: #1E90FF;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.mode-icon.sos {
+  animation: sos-blink 0.5s infinite;
+  color: #DC143C;
+}
+
+@keyframes sos-blink {
+  0%, 100% { color: #DC143C; }
+  50% { color: #1E90FF; }
+}
+
+.mode-text {
+  font-size: 24rpx;
+  color: #666666;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.volume-label {
+  font-size: 26rpx;
+  color: #666666;
+  width: 80rpx;
+}
+
+.volume-slider {
+  flex: 1;
+}
+
+.volume-value {
+  font-size: 26rpx;
+  color: #1E90FF;
+  width: 80rpx;
+  text-align: right;
+}
+
+.data-section {
+  padding: 0 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15rpx;
+}
+
+.data-card {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 25rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.data-icon {
+  font-size: 48rpx;
+}
+
+.data-icon.heart {
+  color: #FF6B6B;
+}
+
+.data-icon.temp {
+  color: #FF8E53;
+}
+
+.data-icon.speed {
+  color: #1E90FF;
+}
+
+.data-icon.posture {
+  color: #32CD32;
+}
+
+.data-value-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 5rpx;
+}
+
+.data-value {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333333;
+}
+
+.data-unit {
+  font-size: 22rpx;
+  color: #999999;
+}
+
+.data-label {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.action-section {
+  padding: 0 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.action-btn {
+  width: 100%;
+  height: 88rpx;
+  font-size: 30rpx;
+}
+
+.btn-secondary {
+  background: #F5F5F5;
+  color: #666666;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #DC143C 0%, #FF4444 100%);
+}

@@ -1,0 +1,154 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #1E90FF 0%, #00BFFF 50%, #F5F5F5 100%);
+  padding: 80rpx 40rpx;
+  box-sizing: border-box;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 80rpx;
+}
+
+.logo {
+  width: 160rpx;
+  height: 160rpx;
+  margin: 0 auto 30rpx;
+  border-radius: 50%;
+  background: #FFFFFF;
+  padding: 20rpx;
+  box-sizing: border-box;
+}
+
+.logo-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #FFFFFF;
+  margin-bottom: 10rpx;
+}
+
+.subtitle {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.login-form {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  box-shadow: 0 10rpx 40rpx rgba(0, 0, 0, 0.1);
+}
+
+.form-item {
+  margin-bottom: 30rpx;
+}
+
+.input {
+  width: 100%;
+  height: 88rpx;
+  background: #F5F5F5;
+  border-radius: 44rpx;
+  padding: 0 30rpx;
+  font-size: 30rpx;
+  box-sizing: border-box;
+}
+
+.code-item {
+  display: flex;
+  gap: 20rpx;
+}
+
+.code-input {
+  flex: 1;
+}
+
+.get-code-btn {
+  width: 200rpx;
+  height: 88rpx;
+  background: #1E90FF;
+  color: #FFFFFF;
+  border-radius: 44rpx;
+  font-size: 26rpx;
+  border: none;
+  outline: none;
+}
+
+.get-code-btn[disabled] {
+  background: #CCCCCC;
+}
+
+.login-btn {
+  width: 100%;
+  height: 96rpx;
+  margin-top: 20rpx;
+  font-size: 34rpx;
+  font-weight: bold;
+}
+
+.login-tips {
+  text-align: center;
+  margin-top: 30rpx;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.link {
+  color: #1E90FF;
+}
+
+.login-bottom {
+  margin-top: 60rpx;
+  text-align: center;
+}
+
+.wechat-login {
+  display: inline-flex;
+  align-items: center;
+  gap: 15rpx;
+  padding: 20rpx 40rpx;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 40rpx;
+  margin-bottom: 40rpx;
+  font-size: 28rpx;
+  color: #333333;
+}
+
+.wechat-icon {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+}
+
+.role-switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20rpx;
+  font-size: 26rpx;
+  color: #FFFFFF;
+}
+
+.role-btns {
+  display: flex;
+  gap: 10rpx;
+}
+
+.role-btn {
+  padding: 12rpx 30rpx;
+  background: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  border: none;
+}
+
+.role-btn.active {
+  background: #FFFFFF;
+  color: #1E90FF;
+}

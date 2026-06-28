@@ -1,0 +1,94 @@
+<view class="container">
+  <view class="sos-header">
+    <view class="header-bg"></view>
+    <view class="header-content">
+      <view class="sos-status {{isSOSActive ? 'active' : ''}}">
+        <view class="status-icon">🚨</view>
+        <view class="status-text">{{isSOSActive ? 'SOS求助中' : '紧急求助'}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="sos-main" wx:if="!isSOSActive">
+    <view class="sos-button" bindlongpress="triggerSOS">
+      <view class="sos-inner">
+        <text class="sos-icon">SOS</text>
+      </view>
+    </view>
+    <view class="sos-hint">长按0.5秒触发紧急求助</view>
+    
+    <view class="quick-actions">
+      <view class="action-item" bindtap="callPolice">
+        <view class="action-icon police">🚔</view>
+        <text class="action-text">拨打110</text>
+      </view>
+      <view class="action-item" bindtap="callAmbulance">
+        <view class="action-icon ambulance">🚑</view>
+        <text class="action-text">拨打120</text>
+      </view>
+      <view class="action-item" bindtap="callContact">
+        <view class="action-icon contact">📞</view>
+        <text class="action-text">联系家人</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="sos-active" wx:if="isSOSActive">
+    <view class="active-header">
+      <view class="active-icon animate-pulse">🚨</view>
+      <view class="active-title">SOS求助已触发</view>
+      <view class="active-desc">正在通知紧急联系人...</view>
+    </view>
+
+    <view class="active-info">
+      <view class="info-item">
+        <view class="info-icon">📍</view>
+        <view class="info-content">
+          <view class="info-label">当前位置</view>
+          <view class="info-value">北京市朝阳区望京SOHO</view>
+        </view>
+      </view>
+      <view class="info-item">
+        <view class="info-icon">⏱</view>
+        <view class="info-content">
+          <view class="info-label">求助时长</view>
+          <view class="info-value">{{formatDuration(duration)}}</view>
+        </view>
+      </view>
+      <view class="info-item">
+        <view class="info-icon">📱</view>
+        <view class="info-content">
+          <view class="info-label">通知状态</view>
+          <view class="info-value success">已通知3位紧急联系人</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="recording-section">
+      <view class="recording-status">
+        <view class="recording-dot"></view>
+        <text class="recording-text">正在录音中...</text>
+      </view>
+      <view class="recording-wave">
+        <view class="wave-bar" wx:for="5" wx:key="index" style="animation-delay: {{index * 0.1}}s;"></view>
+      </view>
+    </view>
+
+    <view class="cancel-section">
+      <button class="cancel-btn" bindtap="cancelSOS">取消求助</button>
+      <view class="cancel-hint">确认您已安全后请取消求助</view>
+    </view>
+  </view>
+
+  <view class="tips-section">
+    <view class="tips-card">
+      <view class="tips-title">📌 使用说明</view>
+      <view class="tips-list">
+        <text class="tip-item">• 长按SOS按钮0.5秒触发紧急求助</text>
+        <text class="tip-item">• 系统会自动发送位置给紧急联系人</text>
+        <text class="tip-item">• 自动录音30秒作为证据</text>
+        <text class="tip-item">• 可随时手动取消求助</text>
+      </view>
+    </view>
+  </view>
+</view>

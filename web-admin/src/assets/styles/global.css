@@ -1,0 +1,71 @@
+/* 全局样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+}
+
+/* 色彩体系 */
+:root {
+  --primary-color: #1E2B4F;      /* 深空蓝 - 主色调 */
+  --primary-light: #2D4A7A;      /* 深空蓝渐变 */
+  --accent-color: #F5A623;       /* 暖浅橙 - 辅助色 */
+  --bg-color: #F0F2F5;           /* 高级灰 - 主内容区背景 */
+  --text-dark: #333333;          /* 深灰 - 文字色 */
+  --text-light: #999999;         /* 浅灰 - 文字色 */
+  --white: #FFFFFF;              /* 纯白 */
+  --success-color: #67C23A;      /* 成功 */
+  --warning-color: #E6A23C;      /* 警告 */
+  --danger-color: #F56C6C;       /* 危险 */
+  --info-color: #409EFF;         /* 信息 */
+}
+
+/* Element Plus 主题色覆盖 */
+.el-button--primary {
+  --el-button-bg-color: var(--primary-color);
+  --el-button-border-color: var(--primary-color);
+  --el-button-hover-bg-color: var(--primary-light);
+  --el-button-hover-border-color: var(--primary-light);
+}
+
+/* 页面过渡动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* 表格行高亮 */
+.warning-row {
+  background-color: #FFF7E6 !important;
+}
+
+/* 卡片阴影 */
+.card-shadow {
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}

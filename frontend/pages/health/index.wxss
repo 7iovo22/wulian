@@ -1,0 +1,321 @@
+.container {
+  min-height: 100vh;
+  background: #F5F5F5;
+  padding-bottom: 120rpx;
+}
+
+.health-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  background: #FFFFFF;
+}
+
+.back-btn {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-icon {
+  font-size: 40rpx;
+  color: #333333;
+}
+
+.header-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333333;
+}
+
+.placeholder {
+  width: 60rpx;
+}
+
+.current-health {
+  padding: 20rpx;
+}
+
+.health-card {
+  display: flex;
+  gap: 15rpx;
+}
+
+.health-item {
+  flex: 1;
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15rpx;
+}
+
+.health-item.heart-rate {
+  background: linear-gradient(135deg, #FFF0F0 0%, #FFE0E0 100%);
+}
+
+.health-item.temperature {
+  background: linear-gradient(135deg, #FFF9E6 0%, #FFF3C4 100%);
+}
+
+.item-icon {
+  font-size: 56rpx;
+}
+
+.item-content {
+  display: flex;
+  align-items: baseline;
+  gap: 8rpx;
+}
+
+.item-value {
+  font-size: 56rpx;
+  font-weight: bold;
+  color: #333333;
+}
+
+.item-unit {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.item-label {
+  font-size: 26rpx;
+  color: #666666;
+}
+
+.item-status {
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+  font-size: 22rpx;
+}
+
+.item-status.normal {
+  background: #E8F8E8;
+  color: #32CD32;
+}
+
+.item-status.warning {
+  background: #FFF9E6;
+  color: #FF8C00;
+}
+
+.item-status.danger {
+  background: #FFE0E0;
+  color: #DC143C;
+}
+
+.chart-section {
+  padding: 0 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333333;
+}
+
+.section-more {
+  font-size: 24rpx;
+  color: #1E90FF;
+}
+
+.time-tabs {
+  display: flex;
+  gap: 10rpx;
+}
+
+.time-tab {
+  padding: 10rpx 20rpx;
+  background: #F5F5F5;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  color: #666666;
+}
+
+.time-tab.active {
+  background: #1E90FF;
+  color: #FFFFFF;
+}
+
+.chart-card {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 30rpx;
+}
+
+.chart-container {
+  display: flex;
+  height: 300rpx;
+}
+
+.chart-y-axis {
+  width: 60rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-right: 15rpx;
+}
+
+.y-label {
+  font-size: 20rpx;
+  color: #999999;
+  text-align: right;
+}
+
+.chart-area {
+  flex: 1;
+  position: relative;
+  border-left: 1rpx solid #E0E0E0;
+  border-bottom: 1rpx solid #E0E0E0;
+}
+
+.chart-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 30rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.grid-line {
+  height: 1rpx;
+  background: #F0F0F0;
+}
+
+.chart-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 30rpx;
+}
+
+.data-point {
+  position: absolute;
+  width: 12rpx;
+  height: 12rpx;
+  background: #1E90FF;
+  border-radius: 50%;
+  transform: translate(-50%, 50%);
+}
+
+.line-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.chart-x-axis {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30rpx;
+  display: flex;
+  justify-content: space-between;
+}
+
+.x-label {
+  font-size: 20rpx;
+  color: #999999;
+}
+
+.heat-warning {
+  margin: 0 20rpx 20rpx;
+  background: linear-gradient(135deg, #FF6347 0%, #FF4500 100%);
+  border-radius: 16rpx;
+  padding: 25rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.warning-icon {
+  font-size: 48rpx;
+}
+
+.warning-content {
+  flex: 1;
+}
+
+.warning-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #FFFFFF;
+  margin-bottom: 8rpx;
+}
+
+.warning-desc {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.warning-action {
+  padding: 15rpx 30rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  color: #FFFFFF;
+}
+
+.history-section {
+  padding: 0 20rpx;
+}
+
+.history-list {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  padding: 25rpx;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-time {
+  width: 120rpx;
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.history-data {
+  flex: 1;
+  display: flex;
+  gap: 30rpx;
+}
+
+.history-heart, .history-temp {
+  font-size: 26rpx;
+  color: #333333;
+}
+
+.history-status {
+  font-size: 24rpx;
+  font-weight: bold;
+}

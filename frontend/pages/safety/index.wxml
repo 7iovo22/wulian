@@ -1,0 +1,112 @@
+<view class="container">
+  <view class="sos-section">
+    <view class="sos-card" bindlongpress="triggerSOS" bindtap="onSOSClick">
+      <view class="sos-icon">
+        <text class="sos-text">SOS</text>
+      </view>
+      <view class="sos-tip">长按0.5秒触发紧急求助</view>
+    </view>
+  </view>
+
+  <view class="stats-section">
+    <view class="stats-card">
+      <view class="stat-item">
+        <view class="stat-value">{{stats.total}}</view>
+        <view class="stat-label">预警总数</view>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <view class="stat-value warning">{{stats.unhandled}}</view>
+        <view class="stat-label">待处理</view>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <view class="stat-value success">{{stats.handled}}</view>
+        <view class="stat-label">已处理</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="warning-section">
+    <view class="section-header">
+      <text class="section-title">预警列表</text>
+      <text class="section-filter" bindtap="showFilter">筛选 →</text>
+    </view>
+    
+    <view class="warning-list">
+      <view 
+        class="warning-item" 
+        wx:for="{{warningList}}" 
+        wx:key="id"
+        bindtap="viewWarningDetail"
+        data-warning="{{item}}"
+      >
+        <view class="warning-icon" style="background: {{getWarningColor(item.alarmType)}};">
+          <text>{{getWarningIcon(item.alarmType)}}</text>
+        </view>
+        <view class="warning-content">
+          <view class="warning-header">
+            <text class="warning-type">{{getWarningTypeName(item.alarmType)}}</text>
+            <text class="warning-time">{{formatTime(item.createTime)}}</text>
+          </view>
+          <view class="warning-desc">{{item.alarmContent}}</view>
+          <view class="warning-footer">
+            <text class="warning-location">📍 {{item.location}}</text>
+            <view class="warning-status" style="color: {{getStatusColor(item.handleStatus)}};">
+              {{item.handleStatus === 0 ? '待处理' : '已处理'}}
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{warningList.length === 0}}">
+      <view class="empty-icon">✓</view>
+      <view class="empty-text">暂无预警记录</view>
+      <view class="empty-hint">您的骑行状态良好</view>
+    </view>
+  </view>
+
+  <view class="quick-section">
+    <view class="section-title">快捷功能</view>
+    <view class="quick-grid">
+      <view class="quick-item" bindtap="goToHealth">
+        <view class="quick-icon health">❤</view>
+        <text class="quick-text">健康监测</text>
+      </view>
+      <view class="quick-item" bindtap="goToFatigue">
+        <view class="quick-icon fatigue">😴</view>
+        <text class="quick-text">疲劳检测</text>
+      </view>
+      <view class="quick-item" bindtap="goToEvidence">
+        <view class="quick-icon evidence">📋</view>
+        <text class="quick-text">证据管理</text>
+      </view>
+      <view class="quick-item" bindtap="goToMutual">
+        <view class="quick-icon mutual">🤝</view>
+        <text class="quick-text">骑手互助</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="fall-detection-modal" wx:if="{{showFallModal}}">
+    <view class="modal-mask" bindtap="cancelFallAlarm"></view>
+    <view class="modal-content">
+      <view class="modal-icon">⚠️</view>
+      <view class="modal-title">检测到异常</view>
+      <view class="modal-desc">系统检测到可能的摔倒，您还好吗？</view>
+      <view class="modal-countdown">
+        <view class="countdown-ring" style="background: conic-gradient(#DC143C 0deg, #DC143C {{countdownAngle}}deg, #E8F4FC {{countdownAngle}}deg, #E8F4FC 360deg);">
+          <view class="countdown-inner">
+            <text class="countdown-num">{{countdown}}</text>
+            <text class="countdown-unit">秒</text>
+          </view>
+        </view>
+      </view>
+      <view class="modal-actions">
+        <button class="modal-btn cancel" bindtap="cancelFallAlarm">我没事</button>
+        <button class="modal-btn confirm" bindtap="confirmFallAlarm">确认报警</button>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,71 @@
+<view class="container">
+  <view class="warning-header">
+    <view class="back-btn" bindtap="goBack">
+      <text class="back-icon">←</text>
+    </view>
+    <view class="header-title">预警详情</view>
+    <view class="placeholder"></view>
+  </view>
+
+  <view class="warning-detail" wx:if="{{warning}}">
+    <view class="detail-header">
+      <view class="warning-type-icon {{warning.type}}">
+        {{warning.icon}}
+      </view>
+      <view class="warning-info">
+        <view class="warning-title">{{warning.title}}</view>
+        <view class="warning-time">{{warning.time}}</view>
+      </view>
+      <view class="warning-status {{warning.status}}">
+        {{warning.status === 'unhandled' ? '未处理' : '已处理'}}
+      </view>
+    </view>
+
+    <view class="detail-card">
+      <view class="detail-title">预警详情</view>
+      <view class="detail-item">
+        <text class="detail-label">预警类型</text>
+        <text class="detail-value">{{warning.typeText}}</text>
+      </view>
+      <view class="detail-item">
+        <text class="detail-label">发生时间</text>
+        <text class="detail-value">{{warning.time}}</text>
+      </view>
+      <view class="detail-item">
+        <text class="detail-label">发生位置</text>
+        <text class="detail-value">{{warning.location || '未知位置'}}</text>
+      </view>
+      <view class="detail-item">
+        <text class="detail-label">严重程度</text>
+        <text class="detail-value severity-{{warning.severity}}">
+          {{warning.severity === 'high' ? '高' : (warning.severity === 'medium' ? '中' : '低')}}
+        </text>
+      </view>
+    </view>
+
+    <view class="detail-card" wx:if="{{warning.description}}">
+      <view class="detail-title">详细描述</view>
+      <view class="description-text">{{warning.description}}</view>
+    </view>
+
+    <view class="detail-card" wx:if="{{warning.handleRecords && warning.handleRecords.length > 0}}">
+      <view class="detail-title">处理记录</view>
+      <view class="record-item" wx:for="{{warning.handleRecords}}" wx:key="index">
+        <view class="record-time">{{item.time}}</view>
+        <view class="record-content">{{item.content}}</view>
+      </view>
+    </view>
+
+    <view class="action-section" wx:if="{{warning.status === 'unhandled'}}">
+      <button class="handle-btn" bindtap="handleWarning">标记已处理</button>
+      <view class="action-hint">确认该预警已得到妥善处理</view>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:else>
+    <view class="empty-icon">⚠️</view>
+    <view class="empty-title">预警不存在</view>
+    <view class="empty-desc">该预警可能已被删除或处理</view>
+    <button class="back-btn-lg" bindtap="goBack">返回预警列表</button>
+  </view>
+</view>

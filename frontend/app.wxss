@@ -1,0 +1,177 @@
+page {
+  background-color: #F5F5F5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.container {
+  padding: 20rpx;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.card {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #1E90FF 0%, #00BFFF 100%);
+  color: #FFFFFF;
+  border-radius: 40rpx;
+  padding: 24rpx 48rpx;
+  font-size: 32rpx;
+  text-align: center;
+  border: none;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #DC143C 0%, #FF4444 100%);
+  color: #FFFFFF;
+}
+
+.btn-secondary {
+  background: #F5F5F5;
+  color: #666666;
+}
+
+.text-primary {
+  color: #1E90FF;
+}
+
+.text-success {
+  color: #32CD32;
+}
+
+.text-warning {
+  color: #FF8C00;
+}
+
+.text-danger {
+  color: #DC143C;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.font-size-sm {
+  font-size: 24rpx;
+}
+
+.font-size-base {
+  font-size: 28rpx;
+}
+
+.font-size-lg {
+  font-size: 32rpx;
+}
+
+.font-size-xl {
+  font-size: 36rpx;
+}
+
+.font-size-xxl {
+  font-size: 48rpx;
+}
+
+.mt-10 {
+  margin-top: 10rpx;
+}
+
+.mt-20 {
+  margin-top: 20rpx;
+}
+
+.mb-10 {
+  margin-bottom: 10rpx;
+}
+
+.mb-20 {
+  margin-bottom: 20rpx;
+}
+
+.mr-10 {
+  margin-right: 10rpx;
+}
+
+.mr-20 {
+  margin-right: 20rpx;
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.icon {
+  width: 48rpx;
+  height: 48rpx;
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5rpx);
+  }
+  75% {
+    transform: translateX(5rpx);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}

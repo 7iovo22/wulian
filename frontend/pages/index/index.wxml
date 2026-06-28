@@ -1,0 +1,173 @@
+<view class="container">
+  <view class="header">
+    <view class="user-info">
+      <image src="{{userInfo.avatar || 'https://picsum.photos/80/80'}}" mode="aspectFill" class="avatar"></image>
+      <view class="user-detail">
+        <view class="user-name">{{userInfo.nickname || '骑手'}}</view>
+        <view class="user-status">在线</view>
+      </view>
+    </view>
+    <view class="header-right">
+      <image src="https://picsum.photos/48/48" mode="aspectFill" class="header-icon"></image>
+    </view>
+  </view>
+
+  <view class="safety-score-card">
+    <view class="score-ring">
+      <view class="score-circle" style="background: conic-gradient(#1E90FF 0deg, #1E90FF {{scoreAngle}}deg, #E8F4FC {{scoreAngle}}deg, #E8F4FC 360deg);">
+        <view class="score-inner">
+          <view class="score-value">{{safetyScore}}</view>
+          <view class="score-label">安全评分</view>
+        </view>
+      </view>
+    </view>
+    <view class="score-info">
+      <view class="score-item">
+        <view class="score-num">{{todayRides}}</view>
+        <view class="score-text">今日骑行</view>
+      </view>
+      <view class="score-item">
+        <view class="score-num">{{totalDistance}}km</view>
+        <view class="score-text">累计里程</view>
+      </view>
+      <view class="score-item">
+        <view class="score-num">{{warningCount}}</view>
+        <view class="score-text">预警次数</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="risk-section">
+    <view class="section-header">
+      <text class="section-title">风险预警</text>
+      <text class="section-more" bindtap="goToWarning">查看全部 →</text>
+    </view>
+    <scroll-view scroll-x class="risk-scroll">
+      <view class="risk-cards">
+        <view 
+          class="risk-card" 
+          wx:for="{{riskList}}" 
+          wx:key="id"
+          style="border-left: 6rpx solid {{getRiskColor(item.level)}};"
+        >
+          <view class="risk-header">
+            <text class="risk-type">{{getRiskTypeName(item.type)}}</text>
+            <text class="risk-time">{{item.time}}</text>
+          </view>
+          <view class="risk-content">{{item.content}}</view>
+          <view class="risk-location">📍 {{item.location}}</view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="quick-actions">
+    <view class="section-header">
+      <text class="section-title">快捷操作</text>
+    </view>
+    <view class="action-grid">
+      <view class="action-item" bindtap="goToSOS">
+        <view class="action-icon sos">
+          <text class="icon-text">SOS</text>
+        </view>
+        <view class="action-text">紧急求助</view>
+      </view>
+      <view class="action-item" bindtap="goToHealth">
+        <view class="action-icon health">
+          <text class="icon-text">❤</text>
+        </view>
+        <view class="action-text">健康监测</view>
+      </view>
+      <view class="action-item" bindtap="goToLocation">
+        <view class="action-icon location">
+          <text class="icon-text">📍</text>
+        </view>
+        <view class="action-text">位置分享</view>
+      </view>
+      <view class="action-item" bindtap="goToReport">
+        <view class="action-icon report">
+          <text class="icon-text">📊</text>
+        </view>
+        <view class="action-text">安全报告</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="device-status-card">
+    <view class="device-header">
+      <view class="device-icon-wrap">
+        <image src="https://picsum.photos/60/60" mode="aspectFill" class="device-icon"></image>
+        <view class="device-status-dot {{deviceInfo.status === 1 ? 'online' : 'offline'}}"></view>
+      </view>
+      <view class="device-info">
+        <view class="device-name">{{deviceInfo.deviceSn || '未绑定设备'}}</view>
+        <view class="device-status-text">{{deviceInfo.status === 1 ? '设备在线' : '设备离线'}}</view>
+      </view>
+      <view class="device-battery">
+        <view class="battery-bar">
+          <view class="battery-fill" style="width: {{deviceInfo.battery || 0}}%;"></view>
+        </view>
+        <text class="battery-text">{{deviceInfo.battery || 0}}%</text>
+      </view>
+    </view>
+    <view class="device-data">
+      <view class="data-item">
+        <view class="data-value">{{healthData.heartRate}}</view>
+        <view class="data-label">心率</view>
+      </view>
+      <view class="data-item">
+        <view class="data-value">{{healthData.temperature}}°C</view>
+        <view class="data-label">体温</view>
+      </view>
+      <view class="data-item">
+        <view class="data-value">{{healthData.speed}}km/h</view>
+        <view class="data-label">速度</view>
+      </view>
+      <view class="data-item">
+        <view class="data-value">{{getPostureText(healthData.posture)}}</view>
+        <view class="data-label">姿态</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="daily-report">
+    <view class="section-header">
+      <text class="section-title">今日报告</text>
+      <text class="section-more" bindtap="goToReport">查看详情 →</text>
+    </view>
+    <view class="report-card">
+      <view class="report-item">
+        <view class="report-icon">🚴</view>
+        <view class="report-info">
+          <view class="report-value">{{dailyReport.rideDistance}}km</view>
+          <view class="report-label">骑行里程</view>
+        </view>
+      </view>
+      <view class="report-item">
+        <view class="report-icon">⚡</view>
+        <view class="report-info">
+          <view class="report-value">{{dailyReport.avgSpeed}}km/h</view>
+          <view class="report-label">平均速度</view>
+        </view>
+      </view>
+      <view class="report-item">
+        <view class="report-icon">🎯</view>
+        <view class="report-info">
+          <view class="report-value">{{dailyReport.safetyScore}}</view>
+          <view class="report-label">安全评分</view>
+        </view>
+      </view>
+      <view class="report-item">
+        <view class="report-icon">⚠️</view>
+        <view class="report-info">
+          <view class="report-value">{{dailyReport.warningCount}}</view>
+          <view class="report-label">预警次数</view>
+        </view>
+      </view>
+    </view>
+    <view class="report-suggestion">
+      <view class="suggestion-icon">💡</view>
+      <text class="suggestion-text">{{dailyReport.suggestion}}</text>
+    </view>
+  </view>
+</view>

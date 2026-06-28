@@ -1,0 +1,68 @@
+<view class="container">
+  <view class="login-header">
+    <view class="logo">
+      <image src="https://picsum.photos/120/120" mode="aspectFill" class="logo-img"></image>
+    </view>
+    <view class="title">骑安智盔</view>
+    <view class="subtitle">AI驱动的智能安全守护</view>
+  </view>
+
+  <view class="login-form">
+    <view class="form-item">
+      <input 
+        class="input" 
+        placeholder="请输入手机号" 
+        bindinput="onPhoneInput"
+        maxlength="11"
+        type="number"
+        value="{{phone}}"
+      />
+    </view>
+    
+    <view class="form-item code-item">
+      <input 
+        class="input code-input" 
+        placeholder="请输入验证码" 
+        bindinput="onCodeInput"
+        maxlength="6"
+        type="number"
+        value="{{code}}"
+      />
+      <button class="get-code-btn" bindtap="getCode" disabled="{{codeBtnDisabled}}">
+        {{codeBtnText}}
+      </button>
+    </view>
+
+    <button class="btn-primary login-btn" bindtap="login">登录</button>
+    
+    <view class="login-tips">
+      <text>登录即表示同意</text>
+      <text class="link">《用户协议》</text>
+      <text>和</text>
+      <text class="link">《隐私政策》</text>
+    </view>
+  </view>
+
+  <view class="login-bottom">
+    <view class="wechat-login" bindtap="wechatLogin">
+      <image src="https://picsum.photos/48/48" mode="aspectFill" class="wechat-icon"></image>
+      <text>微信快捷登录</text>
+    </view>
+    
+    <view class="role-switch">
+      <text>我是</text>
+      <view class="role-btns">
+        <button 
+          class="role-btn {{currentRole === 'rider' ? 'active' : ''}}" 
+          bindtap="switchRole" 
+          data-role="rider"
+        >骑手</button>
+        <button 
+          class="role-btn {{currentRole === 'contact' ? 'active' : ''}}" 
+          bindtap="switchRole" 
+          data-role="contact"
+        >紧急联系人</button>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,153 @@
+<view class="container">
+  <view class="device-header">
+    <view class="header-bg"></view>
+    <view class="header-content">
+      <view class="device-icon-wrap">
+        <image src="https://picsum.photos/100/100" mode="aspectFill" class="device-main-icon"></image>
+        <view class="connection-status {{deviceConnected ? 'connected' : 'disconnected'}}">
+          <view class="status-dot"></view>
+          <text class="status-text">{{deviceConnected ? '已连接' : '未连接'}}</text>
+        </view>
+      </view>
+      <view class="device-title">骑安智盔</view>
+      <view class="device-subtitle">智能安全守护</view>
+    </view>
+  </view>
+
+  <view class="device-info-card">
+    <view class="info-item">
+      <text class="info-label">设备编号</text>
+      <text class="info-value">{{deviceInfo.deviceSn || '未绑定'}}</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">固件版本</text>
+      <text class="info-value">{{deviceInfo.firmwareVersion || '1.0.0'}}</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">绑定时间</text>
+      <text class="info-value">{{bindTime || '2024-01-15'}}</text>
+    </view>
+  </view>
+
+  <view class="battery-card">
+    <view class="battery-header">
+      <text class="battery-title">电池状态</text>
+      <text class="battery-percent">{{deviceInfo.battery || 0}}%</text>
+    </view>
+    <view class="battery-bar-large">
+      <view class="battery-fill-large" style="width: {{deviceInfo.battery || 0}}%; background: {{getBatteryColor(deviceInfo.battery || 0)}};"></view>
+    </view>
+    <view class="battery-info">
+      <text class="battery-text">{{getBatteryStatus(deviceInfo.battery || 0)}}</text>
+    </view>
+  </view>
+
+  <view class="control-section">
+    <view class="section-title">设备控制</view>
+    
+    <view class="control-card">
+      <view class="control-header">
+        <text class="control-label">LED指示灯</text>
+        <switch 
+          class="control-switch" 
+          checked="{{ledStatus !== 0}}" 
+          bindchange="toggleLED"
+        />
+      </view>
+      <view class="led-modes">
+        <view 
+          class="mode-item {{ledStatus === 1 ? 'active' : ''}}" 
+          bindtap="setLEDMode" 
+          data-mode="1"
+        >
+          <view class="mode-icon">●</view>
+          <text class="mode-text">常亮</text>
+        </view>
+        <view 
+          class="mode-item {{ledStatus === 2 ? 'active' : ''}}" 
+          bindtap="setLEDMode" 
+          data-mode="2"
+        >
+          <view class="mode-icon blink">●</view>
+          <text class="mode-text">闪烁</text>
+        </view>
+        <view 
+          class="mode-item {{ledStatus === 3 ? 'active' : ''}}" 
+          bindtap="setLEDMode" 
+          data-mode="3"
+        >
+          <view class="mode-icon sos">●</view>
+          <text class="mode-text">SOS</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="control-card">
+      <view class="control-header">
+        <text class="control-label">语音播报</text>
+        <switch 
+          class="control-switch" 
+          checked="{{voiceEnabled}}" 
+          bindchange="toggleVoice"
+        />
+      </view>
+      <view class="volume-control">
+        <text class="volume-label">音量</text>
+        <slider 
+          class="volume-slider" 
+          min="0" 
+          max="100" 
+          value="{{volume}}" 
+          bindchange="onVolumeChange"
+          activeColor="#1E90FF"
+          backgroundColor="#E8F4FC"
+          block-size="24"
+        />
+        <text class="volume-value">{{volume}}%</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="data-section">
+    <view class="section-title">实时数据</view>
+    <view class="data-grid">
+      <view class="data-card">
+        <view class="data-icon heart">❤</view>
+        <view class="data-value-wrap">
+          <text class="data-value">{{realtimeData.heartRate}}</text>
+          <text class="data-unit">bpm</text>
+        </view>
+        <text class="data-label">心率</text>
+      </view>
+      <view class="data-card">
+        <view class="data-icon temp">🌡</view>
+        <view class="data-value-wrap">
+          <text class="data-value">{{realtimeData.temperature}}</text>
+          <text class="data-unit">°C</text>
+        </view>
+        <text class="data-label">体温</text>
+      </view>
+      <view class="data-card">
+        <view class="data-icon speed">⚡</view>
+        <view class="data-value-wrap">
+          <text class="data-value">{{realtimeData.speed}}</text>
+          <text class="data-unit">km/h</text>
+        </view>
+        <text class="data-label">速度</text>
+      </view>
+      <view class="data-card">
+        <view class="data-icon posture">🧍</view>
+        <view class="data-value-wrap">
+          <text class="data-value">{{getPostureLabel(realtimeData.posture)}}</text>
+        </view>
+        <text class="data-label">姿态</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="action-section">
+    <button class="btn-primary action-btn" bindtap="syncData">同步数据</button>
+    <button class="btn-secondary action-btn" bindtap="updateFirmware">检查更新</button>
+    <button class="btn-danger action-btn" bindtap="unbindDevice">解绑设备</button>
+  </view>
+</view>

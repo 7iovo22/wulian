@@ -1,0 +1,97 @@
+# 服务器配置
+server:
+  port: 8080  # 应用启动端口号
+
+# Spring框架配置
+spring:
+  application:
+    name: qiansan-helmet  # 应用名称，用于服务标识和日志输出
+
+  # 数据库配置（MySQL）
+  datasource:
+    url: jdbc:mysql://localhost:3306/qianan_zhikui?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true  # 数据库连接地址，qianan_zhikui为数据库名
+    username: root  # 数据库用户名
+    password: 123456  # 数据库密码
+    driver-class-name: com.mysql.cj.jdbc.Driver  # MySQL驱动类
+
+# MyBatis-Plus ORM框架配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true  # 开启下划线转驼峰命名映射（数据库字段user_name自动映射到Java属性userName）
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # SQL语句打印到控制台，便于调试
+  mapper-locations: classpath:mapper/*.xml  # Mapper XML文件扫描路径
+  type-aliases-package: com.example.qiansan.entity  # 实体类包路径，XML中可直接使用类名而非全限定名
+
+# MQTT消息队列配置（用于物联网设备通信）
+mqtt:
+  host: broker.emqx.io
+  port: 1883
+  username: ""
+  password: ""
+  client-id: qiananzhikui-test001  # MQTT客户端ID，唯一标识
+  topic-subscribe: device/+/data,device/+/alarm,device/+/sos  # 订阅的主题，多个用逗号分隔
+  timeout: 60  # 连接超时时间（秒）
+  keepalive: 60  # 心跳间隔（秒）
+
+# 硬件设备配置（需要根据实际硬件参数进行配置）
+hardware:
+  # 数据接收配置
+  data:
+    heartbeat-timeout: 30000  # 设备心跳超时时间（毫秒），超过此时间未收到心跳则认为设备离线
+    data-validate: true  # 是否启用数据校验
+    max-heartrate: 250  # 心率最大值（用于数据校验）
+    min-heartrate: 30  # 心率最小值（用于数据校验）
+    max-temperature: 45.0  # 体温最大值（用于数据校验）
+    min-temperature: 30.0  # 体温最小值（用于数据校验）
+
+  # 设备通信配置
+  communication:
+    command-retry-count: 3  # 命令发送重试次数
+    command-retry-delay: 1000  # 命令重试间隔（毫秒）
+    command-timeout: 5000  # 命令响应超时时间（毫秒）
+    max-message-size: 1024  # 单条消息最大字节数
+
+  # 设备型号配置（示例）
+  device-models:
+    helmet-v1:
+      manufacturer: "头盔厂商A"  # 设备制造商
+      firmware-version: "1.0.0"  # 固件版本
+      support-features:  # 支持的功能列表
+        - led_control
+        - voice_broadcast
+        - sos_alarm
+        - heartrate_monitor
+        - temperature_monitor
+        - fall_detection
+        - gps_tracking
+
+# JWT令牌配置（用于用户认证和授权）
+jwt:
+  secret: qiansan-helmet-secret-key-2026-secure-long-enough  # JWT签名密钥，用于生成和验证Token
+  expiration: 86400000  # Token有效期（毫秒），86400000ms = 24小时
+
+# 微信小程序配置
+wechat:
+  miniapp:
+    appid: wxb790e45d3656fab9    # 微信小程序AppID
+    appsecret: 374b0d19fac86357735d06191e4ae343    # 微信小程序AppSecret（需从微信公众平台获取）
+    login-url: https://api.weixin.qq.com/sns/jscode2session  # 微信登录API地址
+
+# 短信服务配置（腾讯云）
+sms:
+  tencent:
+    secret-id: ${SMS_SECRET_ID:your-secret-id}
+    secret-key: ${SMS_SECRET_KEY:your-secret-key}
+    sdk-app-id: ${SMS_APP_ID:your-sdk-app-id}
+    sign-name: ${SMS_SIGN_NAME:your-sign-name}
+    template-id: ${SMS_TEMPLATE_ID:your-template-id}
+    region: ap-guangzhou
+  expire-minutes: 5
+  send-interval-seconds: 60
+  max-daily-send: 10
+
+# 日志级别配置
+logging:
+  level:
+    com.example.qiansan: DEBUG  # 项目代码日志级别设为DEBUG，输出详细调试信息
+    org.springframework.web: INFO  # Spring Web框架日志级别设为INFO，只输出重要信息

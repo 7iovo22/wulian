@@ -1,0 +1,59 @@
+{
+  "pages": [
+    "pages/login/index",
+    "pages/index/index",
+    "pages/device/index",
+    "pages/safety/index",
+    "pages/mine/index",
+    "pages/bind/index",
+    "pages/sos/index",
+    "pages/warning/index",
+    "pages/health/index",
+    "pages/contacts/index"
+  ],
+  "window": {
+    "backgroundColor": "#F5F5F5",
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#1E90FF",
+    "navigationBarTitleText": "骑安智盔",
+    "navigationBarTextStyle": "white",
+    "enablePullDownRefresh": true
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#1E90FF",
+    "borderStyle": "black",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/tab/home.png",
+        "selectedIconPath": "images/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/device/index",
+        "text": "设备",
+        "iconPath": "images/tab/device.png",
+        "selectedIconPath": "images/tab/device-active.png"
+      },
+      {
+        "pagePath": "pages/safety/index",
+        "text": "安全",
+        "iconPath": "images/tab/safety.png",
+        "selectedIconPath": "images/tab/safety-active.png"
+      },
+      {
+        "pagePath": "pages/mine/index",
+        "text": "我的",
+        "iconPath": "images/tab/mine.png",
+        "selectedIconPath": "images/tab/mine-active.png"
+      }
+    ]
+  },
+  "networkTimeout": {
+    "request": 10000,
+    "downloadFile": 10000
+  },
+  "debug": true
+}
