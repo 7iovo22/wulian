@@ -10,8 +10,8 @@ spring:
   # 数据库配置（MySQL）
   datasource:
     url: jdbc:mysql://localhost:3306/qianan_zhikui?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true  # 数据库连接地址，qianan_zhikui为数据库名
-    username: root  # 数据库用户名
-    password: 123456  # 数据库密码
+    username: ${DB_USERNAME:root}  # 数据库用户名
+    password: ${DB_PASSWORD:your-database-password}  # 数据库密码（请设置环境变量或替换为实际密码）
     driver-class-name: com.mysql.cj.jdbc.Driver  # MySQL驱动类
 
 # MyBatis-Plus ORM框架配置
@@ -26,9 +26,9 @@ mybatis-plus:
 mqtt:
   host: broker.emqx.io
   port: 1883
-  username: ""
-  password: ""
-  client-id: qiananzhikui-test001  # MQTT客户端ID，唯一标识
+  username: ${MQTT_USERNAME:''}
+  password: ${MQTT_PASSWORD:''}
+  client-id: ${MQTT_CLIENT_ID:qiananzhikui-test001}  # MQTT客户端ID，唯一标识
   topic-subscribe: device/+/data,device/+/alarm,device/+/sos  # 订阅的主题，多个用逗号分隔
   timeout: 60  # 连接超时时间（秒）
   keepalive: 60  # 心跳间隔（秒）
@@ -67,14 +67,14 @@ hardware:
 
 # JWT令牌配置（用于用户认证和授权）
 jwt:
-  secret: qiansan-helmet-secret-key-2026-secure-long-enough  # JWT签名密钥，用于生成和验证Token
+  secret: ${JWT_SECRET:your-jwt-secret-key-here}  # JWT签名密钥（请设置环境变量或替换为实际密钥）
   expiration: 86400000  # Token有效期（毫秒），86400000ms = 24小时
 
 # 微信小程序配置
 wechat:
   miniapp:
-    appid: wxb790e45d3656fab9    # 微信小程序AppID
-    appsecret: 374b0d19fac86357735d06191e4ae343    # 微信小程序AppSecret（需从微信公众平台获取）
+    appid: ${WECHAT_APPID:your-wechat-appid}    # 微信小程序AppID（请设置环境变量或替换为实际值）
+    appsecret: ${WECHAT_APPSECRET:your-wechat-appsecret}    # 微信小程序AppSecret（请设置环境变量或替换为实际值）
     login-url: https://api.weixin.qq.com/sns/jscode2session  # 微信登录API地址
 
 # 短信服务配置（腾讯云）

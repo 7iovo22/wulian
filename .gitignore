@@ -30,3 +30,6 @@ logs/
 .env
 .env.local
 .env.*.local
+
+# Application config with secrets
+backend/src/main/resources/application.yml
