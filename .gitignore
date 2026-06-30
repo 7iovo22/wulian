@@ -34,3 +34,6 @@ logs/
 
 # Application config with secrets
 backend/src/main/resources/application.yml
+
+# WeChat DevTools private config
+frontend/project.private.config.json
