@@ -1,70 +1,161 @@
+/* ========== 健康监测页面样式 ========== */
 .container {
   min-height: 100vh;
-  background: #F5F5F5;
+  background: var(--color-bg-secondary);
   padding-bottom: 120rpx;
+  animation: fadeIn 0.6s ease-out;
 }
 
+/* ========== 页面头部 ========== */
 .health-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20rpx 30rpx;
-  background: #FFFFFF;
+  padding: 60rpx 32rpx 32rpx;
+  background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  position: relative;
+}
+
+.health-header::before {
+  content: '';
+  position: absolute;
+  top: 20rpx;
+  right: 40rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.health-header::after {
+  content: '';
+  position: absolute;
+  top: 50rpx;
+  right: 80rpx;
+  width: 50rpx;
+  height: 50rpx;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
 }
 
 .back-btn {
-  width: 60rpx;
-  height: 60rpx;
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.back-btn:active {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0.95);
 }
 
 .back-icon {
-  font-size: 40rpx;
-  color: #333333;
+  font-size: 32rpx;
+  color: #FFFFFF;
 }
 
 .header-title {
-  font-size: 32rpx;
+  font-size: 36rpx;
   font-weight: bold;
-  color: #333333;
+  color: #FFFFFF;
+  letter-spacing: 1rpx;
 }
 
 .placeholder {
-  width: 60rpx;
+  width: 64rpx;
 }
 
+/* ========== 当前健康数据卡片 ========== */
 .current-health {
-  padding: 20rpx;
+  padding: 20rpx 24rpx;
 }
 
 .health-card {
   display: flex;
-  gap: 15rpx;
+  gap: 16rpx;
+  margin-top: -20rpx;
 }
 
 .health-item {
   flex: 1;
-  background: #FFFFFF;
-  border-radius: 16rpx;
-  padding: 30rpx;
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15rpx;
+  gap: 16rpx;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
+.health-item:active {
+  transform: scale(0.98);
+}
+
+/* 心率卡片 - 柔和粉色系 */
 .health-item.heart-rate {
-  background: linear-gradient(135deg, #FFF0F0 0%, #FFE0E0 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, var(--color-cute-pink) 100%);
 }
 
+.health-item.heart-rate::before {
+  content: '♥';
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  font-size: 80rpx;
+  color: var(--color-cute-pink);
+  opacity: 0.2;
+}
+
+.health-item.heart-rate::after {
+  content: '';
+  position: absolute;
+  bottom: -15rpx;
+  left: -15rpx;
+  width: 60rpx;
+  height: 60rpx;
+  background: var(--color-cute-pink);
+  border-radius: 50%;
+  opacity: 0.15;
+}
+
+/* 体温卡片 - 柔和橙色系 */
 .health-item.temperature {
-  background: linear-gradient(135deg, #FFF9E6 0%, #FFF3C4 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, var(--color-cute-orange) 100%);
+}
+
+.health-item.temperature::before {
+  content: '🌡';
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  font-size: 70rpx;
+  opacity: 0.2;
+}
+
+.health-item.temperature::after {
+  content: '';
+  position: absolute;
+  bottom: -15rpx;
+  left: -15rpx;
+  width: 60rpx;
+  height: 60rpx;
+  background: var(--color-cute-orange);
+  border-radius: 50%;
+  opacity: 0.15;
 }
 
 .item-icon {
-  font-size: 56rpx;
+  font-size: 60rpx;
+  animation: bounce 2s infinite;
 }
 
 .item-content {
@@ -74,87 +165,111 @@
 }
 
 .item-value {
-  font-size: 56rpx;
+  font-size: 60rpx;
   font-weight: bold;
-  color: #333333;
+  color: var(--color-text-primary);
+  letter-spacing: 1rpx;
 }
 
 .item-unit {
-  font-size: 24rpx;
-  color: #999999;
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+  font-weight: 500;
 }
 
 .item-label {
-  font-size: 26rpx;
-  color: #666666;
+  font-size: 28rpx;
+  color: var(--color-text-secondary);
+  font-weight: 500;
 }
 
 .item-status {
-  padding: 8rpx 20rpx;
-  border-radius: 30rpx;
-  font-size: 22rpx;
+  padding: 10rpx 24rpx;
+  border-radius: var(--radius-pill);
+  font-size: 24rpx;
+  font-weight: 500;
 }
 
 .item-status.normal {
-  background: #E8F8E8;
-  color: #32CD32;
+  background: linear-gradient(135deg, var(--color-cute-green) 0%, var(--color-success-light) 100%);
+  color: #FFFFFF;
 }
 
 .item-status.warning {
-  background: #FFF9E6;
-  color: #FF8C00;
+  background: linear-gradient(135deg, var(--color-cute-orange) 0%, var(--color-warning-light) 100%);
+  color: #FFFFFF;
 }
 
 .item-status.danger {
-  background: #FFE0E0;
-  color: #DC143C;
+  background: linear-gradient(135deg, var(--color-cute-pink) 0%, var(--color-danger-light) 100%);
+  color: #FFFFFF;
 }
 
+/* ========== 图表区域 ========== */
 .chart-section {
-  padding: 0 20rpx;
-  margin-bottom: 20rpx;
+  padding: 0 24rpx;
+  margin-bottom: 24rpx;
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20rpx;
+  margin-bottom: 24rpx;
 }
 
 .section-title {
-  font-size: 30rpx;
+  font-size: 32rpx;
   font-weight: bold;
-  color: #333333;
+  color: var(--color-text-primary);
+  letter-spacing: 1rpx;
 }
 
 .section-more {
-  font-size: 24rpx;
-  color: #1E90FF;
+  font-size: 26rpx;
+  color: var(--color-primary);
+  font-weight: 500;
 }
 
 .time-tabs {
   display: flex;
-  gap: 10rpx;
+  gap: 12rpx;
 }
 
 .time-tab {
-  padding: 10rpx 20rpx;
-  background: #F5F5F5;
-  border-radius: 30rpx;
-  font-size: 24rpx;
-  color: #666666;
+  padding: 12rpx 24rpx;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-pill);
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .time-tab.active {
-  background: #1E90FF;
+  background: var(--color-primary-gradient);
   color: #FFFFFF;
+  box-shadow: var(--shadow-light);
 }
 
 .chart-card {
-  background: #FFFFFF;
-  border-radius: 16rpx;
-  padding: 30rpx;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+.chart-card::before {
+  content: '';
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  width: 60rpx;
+  height: 60rpx;
+  background: var(--color-cute-blue);
+  border-radius: 50%;
+  opacity: 0.2;
 }
 
 .chart-container {
@@ -167,20 +282,20 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-right: 15rpx;
+  padding-right: 16rpx;
 }
 
 .y-label {
-  font-size: 20rpx;
-  color: #999999;
+  font-size: 22rpx;
+  color: var(--color-text-disabled);
   text-align: right;
 }
 
 .chart-area {
   flex: 1;
   position: relative;
-  border-left: 1rpx solid #E0E0E0;
-  border-bottom: 1rpx solid #E0E0E0;
+  border-left: 1rpx solid var(--color-border-light);
+  border-bottom: 1rpx solid var(--color-border-light);
 }
 
 .chart-grid {
@@ -196,7 +311,7 @@
 
 .grid-line {
   height: 1rpx;
-  background: #F0F0F0;
+  background: var(--color-bg-tertiary);
 }
 
 .chart-line {
@@ -209,11 +324,13 @@
 
 .data-point {
   position: absolute;
-  width: 12rpx;
-  height: 12rpx;
-  background: #1E90FF;
+  width: 16rpx;
+  height: 16rpx;
+  background: var(--color-primary-gradient);
   border-radius: 50%;
   transform: translate(-50%, 50%);
+  box-shadow: 0 2rpx 8rpx rgba(79, 195, 247, 0.3);
+  border: 2rpx solid #FFFFFF;
 }
 
 .line-svg {
@@ -235,22 +352,36 @@
 }
 
 .x-label {
-  font-size: 20rpx;
-  color: #999999;
+  font-size: 22rpx;
+  color: var(--color-text-disabled);
 }
 
+/* ========== 预警卡片 ========== */
 .heat-warning {
-  margin: 0 20rpx 20rpx;
-  background: linear-gradient(135deg, #FF6347 0%, #FF4500 100%);
-  border-radius: 16rpx;
-  padding: 25rpx;
+  margin: 0 24rpx 24rpx;
+  background: linear-gradient(135deg, var(--color-danger-light) 0%, #E53935 100%);
+  border-radius: var(--radius-xl);
+  padding: 32rpx;
   display: flex;
   align-items: center;
-  gap: 20rpx;
+  gap: 24rpx;
+  box-shadow: 0 6rpx 20rpx rgba(229, 57, 53, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.heat-warning::before {
+  content: '⚠️';
+  position: absolute;
+  top: -20rpx;
+  right: -20rpx;
+  font-size: 100rpx;
+  opacity: 0.15;
 }
 
 .warning-icon {
-  font-size: 48rpx;
+  font-size: 52rpx;
+  animation: pulse 2s infinite;
 }
 
 .warning-content {
@@ -258,64 +389,148 @@
 }
 
 .warning-title {
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: bold;
   color: #FFFFFF;
-  margin-bottom: 8rpx;
+  margin-bottom: 10rpx;
+  letter-spacing: 1rpx;
 }
 
 .warning-desc {
-  font-size: 24rpx;
+  font-size: 26rpx;
   color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
 }
 
 .warning-action {
-  padding: 15rpx 30rpx;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 30rpx;
-  font-size: 26rpx;
+  padding: 18rpx 36rpx;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-pill);
+  font-size: 28rpx;
   color: #FFFFFF;
+  font-weight: 500;
+  backdrop-filter: blur(10rpx);
+  transition: all 0.3s ease;
 }
 
+.warning-action:active {
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(0.95);
+}
+
+/* ========== 历史记录 ========== */
 .history-section {
-  padding: 0 20rpx;
+  padding: 0 24rpx;
 }
 
 .history-list {
-  background: #FFFFFF;
-  border-radius: 16rpx;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+  border-radius: var(--radius-xl);
   overflow: hidden;
+  box-shadow: var(--shadow-light);
 }
 
 .history-item {
   display: flex;
   align-items: center;
-  padding: 25rpx;
-  border-bottom: 1rpx solid #F5F5F5;
+  padding: 28rpx;
+  border-bottom: 1rpx solid var(--color-border-light);
+  transition: all 0.3s ease;
+  position: relative;
 }
 
 .history-item:last-child {
   border-bottom: none;
 }
 
+.history-item:active {
+  background: var(--color-bg-secondary);
+}
+
 .history-time {
   width: 120rpx;
-  font-size: 24rpx;
-  color: #999999;
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+  font-weight: 500;
 }
 
 .history-data {
   flex: 1;
   display: flex;
-  gap: 30rpx;
+  gap: 32rpx;
 }
 
 .history-heart, .history-temp {
-  font-size: 26rpx;
-  color: #333333;
+  font-size: 28rpx;
+  color: var(--color-text-primary);
+  font-weight: 500;
 }
 
 .history-status {
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-weight: bold;
+}
+
+.history-status.normal {
+  color: var(--color-success);
+}
+
+.history-status.warning {
+  color: var(--color-warning);
+}
+
+.history-status.danger {
+  color: var(--color-danger);
+}
+
+/* ========== 动画效果 ========== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8rpx);
+  }
+}
+
+/* ========== 卡通装饰元素 ========== */
+.decor-circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.decor-circle.primary {
+  background: var(--color-primary);
+}
+
+.decor-circle.pink {
+  background: var(--color-cute-pink);
+}
+
+.decor-circle.orange {
+  background: var(--color-cute-orange);
 }

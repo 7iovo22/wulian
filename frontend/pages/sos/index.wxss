@@ -1,7 +1,32 @@
 .container {
   min-height: 100vh;
-  background: #F5F5F5;
+  background: linear-gradient(180deg, var(--color-cute-pink) 0%, var(--color-danger-light) 30%, var(--color-bg-secondary) 100%);
   padding-bottom: 40rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 卡通装饰元素 */
+.container::before {
+  content: '';
+  position: absolute;
+  top: 100rpx;
+  right: -60rpx;
+  width: 180rpx;
+  height: 180rpx;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+}
+
+.container::after {
+  content: '';
+  position: absolute;
+  top: 300rpx;
+  left: -80rpx;
+  width: 200rpx;
+  height: 200rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
 }
 
 .sos-header {
@@ -15,8 +40,19 @@
   left: 0;
   right: 0;
   height: 200rpx;
-  background: linear-gradient(135deg, #DC143C 0%, #FF4444 100%);
+  background: linear-gradient(135deg, var(--color-cute-pink) 0%, var(--color-danger-light) 100%);
   border-radius: 0 0 40rpx 40rpx;
+}
+
+.header-bg::before {
+  content: '';
+  position: absolute;
+  top: 30rpx;
+  left: 40rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
 }
 
 .header-content {
@@ -31,7 +67,7 @@
 }
 
 .sos-status.active .status-icon {
-  animation: pulse 1s infinite;
+  animation: pulse 1.5s infinite ease-in-out;
 }
 
 .status-icon {
@@ -41,12 +77,8 @@
 .status-text {
   font-size: 32rpx;
   font-weight: bold;
-  color: #FFFFFF;
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
+  color: var(--color-bg-primary);
+  letter-spacing: 1rpx;
 }
 
 .sos-main {
@@ -56,38 +88,132 @@
   padding: 60rpx 20rpx;
 }
 
+/* SOS按钮 - 强化视觉效果 */
 .sos-button {
   width: 280rpx;
   height: 280rpx;
-  background: linear-gradient(135deg, #DC143C 0%, #FF4444 100%);
+  background: linear-gradient(135deg, var(--color-cute-pink) 0%, var(--color-danger-light) 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10rpx 50rpx rgba(220, 20, 60, 0.4);
+  box-shadow: 
+    0 10rpx 50rpx rgba(239, 83, 80, 0.4),
+    0 0 80rpx rgba(239, 83, 80, 0.2),
+    inset 0 -8rpx 20rpx rgba(0, 0, 0, 0.1),
+    inset 0 8rpx 20rpx rgba(255, 255, 255, 0.2);
   margin-bottom: 30rpx;
+  position: relative;
+  animation: sosGlow 2s infinite ease-in-out;
+  transition: all 0.3s ease;
+}
+
+.sos-button:active {
+  transform: scale(0.95);
+  box-shadow: 
+    0 5rpx 30rpx rgba(239, 83, 80, 0.4),
+    0 0 60rpx rgba(239, 83, 80, 0.2);
+}
+
+/* SOS按钮外环动画 */
+.sos-button::before {
+  content: '';
+  position: absolute;
+  top: -15rpx;
+  left: -15rpx;
+  right: -15rpx;
+  bottom: -15rpx;
+  border: 3rpx dashed rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  animation: rotate 15s linear infinite;
+}
+
+/* SOS按钮内环装饰 */
+.sos-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 320rpx;
+  height: 320rpx;
+  margin-top: -160rpx;
+  margin-left: -160rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  animation: pulseRing 2s infinite ease-out;
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.9);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+
+@keyframes sosGlow {
+  0%, 100% {
+    box-shadow: 
+      0 10rpx 50rpx rgba(239, 83, 80, 0.4),
+      0 0 80rpx rgba(239, 83, 80, 0.2),
+      inset 0 -8rpx 20rpx rgba(0, 0, 0, 0.1),
+      inset 0 8rpx 20rpx rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 15rpx 60rpx rgba(239, 83, 80, 0.5),
+      0 0 100rpx rgba(239, 83, 80, 0.3),
+      inset 0 -8rpx 20rpx rgba(0, 0, 0, 0.1),
+      inset 0 8rpx 20rpx rgba(255, 255, 255, 0.2);
+  }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .sos-inner {
   width: 220rpx;
   height: 220rpx;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.sos-inner::before {
+  content: '';
+  position: absolute;
+  top: 10rpx;
+  left: 10rpx;
+  right: 10rpx;
+  bottom: 10rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
 }
 
 .sos-icon {
   font-size: 48rpx;
   font-weight: bold;
-  color: #FFFFFF;
+  color: var(--color-bg-primary);
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
 }
 
 .sos-hint {
   font-size: 26rpx;
-  color: #999999;
+  color: var(--color-text-secondary);
   margin-bottom: 40rpx;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 12rpx 24rpx;
+  border-radius: 20rpx;
+  box-shadow: var(--shadow-light);
 }
 
 .quick-actions {
@@ -110,23 +236,30 @@
   align-items: center;
   justify-content: center;
   font-size: 40rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.action-icon:active {
+  transform: scale(0.9);
 }
 
 .action-icon.police {
-  background: linear-gradient(135deg, #1E90FF 0%, #00BFFF 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
 }
 
 .action-icon.ambulance {
-  background: linear-gradient(135deg, #32CD32 0%, #90EE90 100%);
+  background: linear-gradient(135deg, var(--color-cute-green) 0%, var(--color-success-light) 100%);
 }
 
 .action-icon.contact {
-  background: linear-gradient(135deg, #FF8C00 0%, #FFA500 100%);
+  background: linear-gradient(135deg, var(--color-cute-orange) 0%, var(--color-warning-light) 100%);
 }
 
 .action-text {
   font-size: 24rpx;
-  color: #666666;
+  color: var(--color-text-secondary);
+  font-weight: 500;
 }
 
 .sos-active {
@@ -141,25 +274,29 @@
 .active-icon {
   font-size: 80rpx;
   margin-bottom: 20rpx;
+  animation: pulse 1.5s infinite ease-in-out;
 }
 
 .active-title {
   font-size: 36rpx;
   font-weight: bold;
-  color: #DC143C;
+  color: var(--color-danger);
   margin-bottom: 10rpx;
+  letter-spacing: 1rpx;
 }
 
 .active-desc {
   font-size: 26rpx;
-  color: #999999;
+  color: var(--color-text-secondary);
+  font-weight: 500;
 }
 
 .active-info {
-  background: #FFFFFF;
-  border-radius: 16rpx;
+  background: linear-gradient(135deg, var(--color-bg-primary) 0%, #F8F9FA 100%);
+  border-radius: var(--radius-lg);
   padding: 25rpx;
   margin-bottom: 20rpx;
+  box-shadow: var(--shadow-light);
 }
 
 .info-item {
@@ -167,7 +304,7 @@
   align-items: center;
   gap: 20rpx;
   padding: 20rpx 0;
-  border-bottom: 1rpx solid #F5F5F5;
+  border-bottom: 1rpx solid var(--color-border-light);
 }
 
 .info-item:last-child {
@@ -184,25 +321,27 @@
 
 .info-label {
   font-size: 24rpx;
-  color: #999999;
+  color: var(--color-text-secondary);
   margin-bottom: 5rpx;
+  font-weight: 500;
 }
 
 .info-value {
   font-size: 28rpx;
-  color: #333333;
+  color: var(--color-text-primary);
   font-weight: bold;
 }
 
 .info-value.success {
-  color: #32CD32;
+  color: var(--color-success);
 }
 
 .recording-section {
-  background: #FFF0F0;
-  border-radius: 16rpx;
+  background: linear-gradient(135deg, rgba(248, 187, 208, 0.3) 0%, rgba(239, 83, 80, 0.2) 100%);
+  border-radius: var(--radius-lg);
   padding: 30rpx;
   margin-bottom: 20rpx;
+  box-shadow: var(--shadow-light);
 }
 
 .recording-status {
@@ -215,19 +354,20 @@
 .recording-dot {
   width: 16rpx;
   height: 16rpx;
-  background: #DC143C;
+  background: var(--color-danger);
   border-radius: 50%;
   animation: blink 1s infinite;
+  box-shadow: 0 0 8rpx rgba(239, 83, 80, 0.6);
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.8); }
 }
 
 .recording-text {
   font-size: 28rpx;
-  color: #DC143C;
+  color: var(--color-danger);
   font-weight: bold;
 }
 
@@ -242,10 +382,16 @@
 .wave-bar {
   width: 8rpx;
   height: 100%;
-  background: #DC143C;
+  background: linear-gradient(180deg, var(--color-cute-pink) 0%, var(--color-danger) 100%);
   border-radius: 4rpx;
   animation: wave 0.5s infinite ease-in-out;
 }
+
+.wave-bar:nth-child(1) { animation-delay: 0s; }
+.wave-bar:nth-child(2) { animation-delay: 0.1s; }
+.wave-bar:nth-child(3) { animation-delay: 0.2s; }
+.wave-bar:nth-child(4) { animation-delay: 0.3s; }
+.wave-bar:nth-child(5) { animation-delay: 0.4s; }
 
 @keyframes wave {
   0%, 100% { height: 20%; }
@@ -259,18 +405,26 @@
 .cancel-btn {
   width: 100%;
   height: 96rpx;
-  background: linear-gradient(135deg, #DC143C 0%, #FF4444 100%);
-  color: #FFFFFF;
+  background: linear-gradient(135deg, var(--color-cute-pink) 0%, var(--color-danger-light) 100%);
+  color: var(--color-bg-primary);
   border-radius: 48rpx;
   font-size: 32rpx;
   font-weight: bold;
   border: none;
   margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(239, 83, 80, 0.3);
+  transition: all 0.3s ease;
+}
+
+.cancel-btn:active {
+  transform: scale(0.96);
+  opacity: 0.85;
 }
 
 .cancel-hint {
   font-size: 24rpx;
-  color: #999999;
+  color: var(--color-text-secondary);
+  font-weight: 500;
 }
 
 .tips-section {
@@ -278,16 +432,29 @@
 }
 
 .tips-card {
-  background: #FFFFFF;
-  border-radius: 16rpx;
+  background: linear-gradient(135deg, var(--color-bg-primary) 0%, #F8F9FA 100%);
+  border-radius: var(--radius-lg);
   padding: 25rpx;
+  box-shadow: var(--shadow-light);
+  position: relative;
+  overflow: hidden;
+}
+
+.tips-card::before {
+  content: '💡';
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  font-size: 28rpx;
+  opacity: 0.3;
 }
 
 .tips-title {
   font-size: 28rpx;
   font-weight: bold;
-  color: #333333;
+  color: var(--color-text-primary);
   margin-bottom: 20rpx;
+  letter-spacing: 1rpx;
 }
 
 .tips-list {
@@ -298,6 +465,28 @@
 
 .tip-item {
   font-size: 26rpx;
-  color: #666666;
+  color: var(--color-text-secondary);
   line-height: 1.5;
+  padding-left: 20rpx;
+  position: relative;
+  font-weight: 500;
+}
+
+.tip-item::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--color-primary);
+  font-weight: bold;
+}
+
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(1); 
+    opacity: 1;
+  }
+  50% { 
+    transform: scale(1.1); 
+    opacity: 0.8;
+  }
 }

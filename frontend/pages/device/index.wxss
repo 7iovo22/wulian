@@ -1,9 +1,10 @@
 .container {
   min-height: 100vh;
-  background: #F5F5F5;
+  background: var(--color-bg-secondary);
   padding-bottom: 120rpx;
 }
 
+/* 设备头部区域 */
 .device-header {
   position: relative;
   padding: 60rpx 30rpx 40rpx;
@@ -15,8 +16,31 @@
   left: 0;
   right: 0;
   height: 300rpx;
-  background: linear-gradient(135deg, #1E90FF 0%, #00BFFF 100%);
-  border-radius: 0 0 40rpx 40rpx;
+  background: var(--color-primary-gradient);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+}
+
+/* 卡通装饰元素 */
+.header-bg::before {
+  content: '';
+  position: absolute;
+  top: 40rpx;
+  right: 60rpx;
+  width: 100rpx;
+  height: 100rpx;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+}
+
+.header-bg::after {
+  content: '';
+  position: absolute;
+  top: 80rpx;
+  left: 80rpx;
+  width: 60rpx;
+  height: 60rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
 }
 
 .header-content {
@@ -30,6 +54,7 @@
   width: 160rpx;
   height: 160rpx;
   margin: 0 auto 20rpx;
+  animation: fadeIn 0.8s ease-out;
 }
 
 .device-main-icon {
@@ -37,6 +62,7 @@
   height: 100%;
   border-radius: 50%;
   border: 6rpx solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);
 }
 
 .connection-status {
@@ -49,15 +75,19 @@
   gap: 8rpx;
   background: rgba(0, 0, 0, 0.6);
   padding: 8rpx 20rpx;
-  border-radius: 30rpx;
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(10rpx);
 }
 
 .connection-status.connected .status-dot {
-  background: #32CD32;
+  background: var(--color-success);
+  box-shadow: 0 0 8rpx var(--color-success);
+  animation: pulse 2s infinite;
 }
 
 .connection-status.disconnected .status-dot {
-  background: #DC143C;
+  background: var(--color-danger);
+  box-shadow: 0 0 8rpx var(--color-danger);
 }
 
 .status-dot {
@@ -69,6 +99,7 @@
 .status-text {
   font-size: 22rpx;
   color: #FFFFFF;
+  font-weight: 500;
 }
 
 .device-title {
@@ -76,19 +107,37 @@
   font-weight: bold;
   color: #FFFFFF;
   margin-bottom: 8rpx;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
 }
 
 .device-subtitle {
   font-size: 26rpx;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
 }
 
+/* 设备信息卡片 */
 .device-info-card {
   margin: -20rpx 20rpx 20rpx;
-  background: #FFFFFF;
-  border-radius: 16rpx;
+  background: linear-gradient(135deg, var(--color-bg-primary) 0%, #F8F9FA 100%);
+  border-radius: var(--radius-lg);
   padding: 25rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
+  animation: fadeIn 0.6s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.device-info-card::before {
+  content: '';
+  position: absolute;
+  top: -30rpx;
+  right: -30rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background: var(--color-cute-blue);
+  border-radius: 50%;
+  opacity: 0.2;
 }
 
 .info-item {
@@ -96,29 +145,53 @@
   justify-content: space-between;
   align-items: center;
   padding: 15rpx 0;
-  border-bottom: 1rpx solid #F5F5F5;
+  border-bottom: 1rpx solid var(--color-border-light);
+  transition: all 0.3s ease;
 }
 
 .info-item:last-child {
   border-bottom: none;
 }
 
+.info-item:active {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  padding-left: 12rpx;
+  padding-right: 12rpx;
+  margin: 0 -12rpx;
+}
+
 .info-label {
   font-size: 26rpx;
-  color: #999999;
+  color: var(--color-text-secondary);
+  font-weight: 500;
 }
 
 .info-value {
   font-size: 26rpx;
-  color: #333333;
+  color: var(--color-text-primary);
   font-weight: bold;
 }
 
+/* 电池卡片 */
 .battery-card {
   margin: 0 20rpx 20rpx;
-  background: #FFFFFF;
-  border-radius: 16rpx;
+  background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-cute-blue) 100%);
+  border-radius: var(--radius-lg);
   padding: 25rpx;
+  box-shadow: var(--shadow-light);
+  animation: fadeIn 0.7s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.battery-card::before {
+  content: '⚡';
+  position: absolute;
+  top: 16rpx;
+  right: 20rpx;
+  font-size: 32rpx;
+  opacity: 0.4;
 }
 
 .battery-header {
@@ -131,27 +204,30 @@
 .battery-title {
   font-size: 28rpx;
   font-weight: bold;
-  color: #333333;
+  color: var(--color-text-primary);
 }
 
 .battery-percent {
   font-size: 36rpx;
   font-weight: bold;
-  color: #1E90FF;
+  color: var(--color-primary);
 }
 
 .battery-bar-large {
   height: 24rpx;
-  background: #F0F0F0;
-  border-radius: 12rpx;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius-pill);
   overflow: hidden;
   margin-bottom: 15rpx;
+  box-shadow: inset 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
 }
 
 .battery-fill-large {
   height: 100%;
-  border-radius: 12rpx;
+  background: var(--color-primary-gradient);
+  border-radius: var(--radius-pill);
   transition: width 0.3s ease;
+  box-shadow: 0 2rpx 8rpx rgba(79, 195, 247, 0.4);
 }
 
 .battery-info {
@@ -160,9 +236,11 @@
 
 .battery-text {
   font-size: 24rpx;
-  color: #999999;
+  color: var(--color-text-secondary);
+  font-weight: 500;
 }
 
+/* 控制区域 */
 .control-section {
   padding: 0 20rpx;
   margin-bottom: 20rpx;
@@ -171,15 +249,32 @@
 .section-title {
   font-size: 30rpx;
   font-weight: bold;
-  color: #333333;
+  color: var(--color-text-primary);
   margin-bottom: 20rpx;
+  letter-spacing: 1rpx;
 }
 
 .control-card {
-  background: #FFFFFF;
-  border-radius: 16rpx;
+  background: linear-gradient(135deg, var(--color-bg-primary) 0%, #F8F9FA 100%);
+  border-radius: var(--radius-lg);
   padding: 25rpx;
   margin-bottom: 15rpx;
+  box-shadow: var(--shadow-light);
+  animation: fadeIn 0.8s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.control-card::after {
+  content: '';
+  position: absolute;
+  bottom: -15rpx;
+  right: -15rpx;
+  width: 60rpx;
+  height: 60rpx;
+  background: var(--color-cute-blue);
+  border-radius: 50%;
+  opacity: 0.15;
 }
 
 .control-header {
@@ -192,13 +287,14 @@
 .control-label {
   font-size: 28rpx;
   font-weight: bold;
-  color: #333333;
+  color: var(--color-text-primary);
 }
 
 .control-switch {
   transform: scale(0.8);
 }
 
+/* LED模式 */
 .led-modes {
   display: flex;
   justify-content: space-around;
@@ -210,24 +306,31 @@
   align-items: center;
   gap: 10rpx;
   padding: 20rpx 30rpx;
-  background: #F5F5F5;
-  border-radius: 12rpx;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
   transition: all 0.3s ease;
+  border: 2rpx solid transparent;
+}
+
+.mode-item:active {
+  transform: scale(0.95);
 }
 
 .mode-item.active {
-  background: #E8F4FC;
-  border: 2rpx solid #1E90FF;
+  background: linear-gradient(135deg, var(--color-cute-blue) 0%, #E3F2FD 100%);
+  border: 2rpx solid var(--color-primary);
+  box-shadow: 0 4rpx 12rpx rgba(79, 195, 247, 0.2);
 }
 
 .mode-icon {
   font-size: 36rpx;
-  color: #999999;
+  color: var(--color-text-secondary);
+  transition: all 0.3s ease;
 }
 
 .mode-icon.blink {
   animation: blink 1s infinite;
-  color: #1E90FF;
+  color: var(--color-primary);
 }
 
 @keyframes blink {
@@ -237,19 +340,21 @@
 
 .mode-icon.sos {
   animation: sos-blink 0.5s infinite;
-  color: #DC143C;
+  color: var(--color-danger);
 }
 
 @keyframes sos-blink {
-  0%, 100% { color: #DC143C; }
-  50% { color: #1E90FF; }
+  0%, 100% { color: var(--color-danger); }
+  50% { color: var(--color-primary); }
 }
 
 .mode-text {
   font-size: 24rpx;
-  color: #666666;
+  color: var(--color-text-secondary);
+  font-weight: 500;
 }
 
+/* 音量控制 */
 .volume-control {
   display: flex;
   align-items: center;
@@ -258,8 +363,9 @@
 
 .volume-label {
   font-size: 26rpx;
-  color: #666666;
+  color: var(--color-text-secondary);
   width: 80rpx;
+  font-weight: 500;
 }
 
 .volume-slider {
@@ -268,11 +374,13 @@
 
 .volume-value {
   font-size: 26rpx;
-  color: #1E90FF;
+  color: var(--color-primary);
   width: 80rpx;
   text-align: right;
+  font-weight: bold;
 }
 
+/* 数据展示区域 */
 .data-section {
   padding: 0 20rpx;
   margin-bottom: 20rpx;
@@ -285,13 +393,50 @@
 }
 
 .data-card {
-  background: #FFFFFF;
-  border-radius: 16rpx;
+  background: linear-gradient(135deg, var(--color-bg-primary) 0%, #F8F9FA 100%);
+  border-radius: var(--radius-lg);
   padding: 25rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10rpx;
+  box-shadow: var(--shadow-light);
+  transition: all 0.3s ease;
+  animation: fadeIn 0.9s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.data-card::before {
+  content: '';
+  position: absolute;
+  top: -15rpx;
+  left: -15rpx;
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
+  opacity: 0.15;
+}
+
+.data-card:nth-child(1)::before {
+  background: var(--color-cute-pink);
+}
+
+.data-card:nth-child(2)::before {
+  background: var(--color-cute-orange);
+}
+
+.data-card:nth-child(3)::before {
+  background: var(--color-primary);
+}
+
+.data-card:nth-child(4)::before {
+  background: var(--color-cute-green);
+}
+
+.data-card:active {
+  transform: translateY(-2rpx);
+  box-shadow: var(--shadow-medium);
 }
 
 .data-icon {
@@ -303,15 +448,15 @@
 }
 
 .data-icon.temp {
-  color: #FF8E53;
+  color: var(--color-cute-orange);
 }
 
 .data-icon.speed {
-  color: #1E90FF;
+  color: var(--color-primary);
 }
 
 .data-icon.posture {
-  color: #32CD32;
+  color: var(--color-success);
 }
 
 .data-value-wrap {
@@ -323,19 +468,21 @@
 .data-value {
   font-size: 36rpx;
   font-weight: bold;
-  color: #333333;
+  color: var(--color-text-primary);
 }
 
 .data-unit {
   font-size: 22rpx;
-  color: #999999;
+  color: var(--color-text-secondary);
 }
 
 .data-label {
   font-size: 24rpx;
-  color: #999999;
+  color: var(--color-text-secondary);
+  font-weight: 500;
 }
 
+/* 操作按钮区域 */
 .action-section {
   padding: 0 20rpx;
   display: flex;
@@ -347,13 +494,57 @@
   width: 100%;
   height: 88rpx;
   font-size: 30rpx;
+  font-weight: 600;
+  letter-spacing: 1rpx;
 }
 
 .btn-secondary {
-  background: #F5F5F5;
-  color: #666666;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-pill);
+  border: none;
+  box-shadow: var(--shadow-light);
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:active {
+  background: var(--color-border);
+  transform: scale(0.98);
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, #DC143C 0%, #FF4444 100%);
+  background: var(--color-danger-gradient);
+  color: var(--color-bg-primary);
+  border-radius: var(--radius-pill);
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(239, 83, 80, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-danger:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
 }

@@ -37,7 +37,7 @@ Page({
   loadData: function () {
     const userInfo = wx.getStorageSync('userInfo');
     const deviceInfo = wx.getStorageSync('deviceInfo');
-    
+
     this.setData({
       userInfo: userInfo ? JSON.parse(userInfo) : {},
       deviceInfo: deviceInfo ? JSON.parse(deviceInfo) : {}
@@ -75,7 +75,7 @@ Page({
         time: '08:45'
       }
     ];
-    
+
     this.setData({
       riskList: mockRisks
     });
@@ -88,7 +88,7 @@ Page({
       speed: (20 + Math.random() * 15).toFixed(1),
       posture: 'normal'
     };
-    
+
     this.setData({
       healthData: mockData
     });
@@ -102,9 +102,9 @@ Page({
       warningCount: Math.floor(Math.random() * 5),
       suggestion: this.getRandomSuggestion()
     };
-    
+
     const scoreAngle = (report.safetyScore / 100) * 360;
-    
+
     this.setData({
       dailyReport: report,
       safetyScore: report.safetyScore,

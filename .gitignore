@@ -17,6 +17,7 @@ yarn-debug.log*
 yarn-error.log*
 web-admin/dist/
 web-admin/Inodejs/
+frontend/Inodejs/
 
 # OS
 .DS_Store

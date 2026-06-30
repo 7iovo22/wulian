@@ -12,17 +12,17 @@
     "pages/contacts/index"
   ],
   "window": {
-    "backgroundColor": "#F5F5F5",
+    "backgroundColor": "#F0F4F8",
     "backgroundTextStyle": "dark",
-    "navigationBarBackgroundColor": "#1E90FF",
+    "navigationBarBackgroundColor": "#4FC3F7",
     "navigationBarTitleText": "骑安智盔",
     "navigationBarTextStyle": "white",
     "enablePullDownRefresh": true
   },
   "tabBar": {
-    "color": "#999999",
-    "selectedColor": "#1E90FF",
-    "borderStyle": "black",
+    "color": "#78909C",
+    "selectedColor": "#4FC3F7",
+    "borderStyle": "white",
     "backgroundColor": "#FFFFFF",
     "list": [
       {

@@ -181,7 +181,7 @@ Page({
     }, 1000);
   },
 
-  wechatLogin: function () {
+  wechatLogin: async function () {
     if (!this.isPageActive) return;
 
     if (!app.globalData.networkConnected) {
@@ -193,126 +193,124 @@ Page({
       return;
     }
 
-    const loadingShown = true;
-    wx.showLoading({
-      title: '微信登录中...',
-      mask: true
-    });
+    try {
+      // 1. 获取微信登录凭证 code
+      const loginRes = await new Promise((resolve, reject) => {
+        wx.login({
+          timeout: 10000,
+          success: resolve,
+          fail: reject
+        });
+      });
 
-    const hideLoadingIfShown = () => {
-      if (loadingShown) {
-        wx.hideLoading();
-      }
-    };
-
-    this.loginTimeoutTimer = setTimeout(() => {
-      hideLoadingIfShown();
       if (!this.isPageActive) return;
 
-      wx.showToast({
-        title: '登录超时，请重试',
-        icon: 'none',
-        duration: 2000
-      });
-      if (isLogEnabled()) {
-        console.error('[Login] 微信登录超时');
-      }
-    }, 15000);
-
-    wx.login({
-      timeout: 10000,
-      success: (res) => {
-        if (this.loginTimeoutTimer) {
-          clearTimeout(this.loginTimeoutTimer);
-          this.loginTimeoutTimer = null;
-        }
-
-        if (!this.isPageActive) {
-          hideLoadingIfShown();
-          return;
-        }
-
-        if (isLogEnabled()) {
-          console.log('[Login] 微信登录code:', res.code);
-        }
-
-        if (!res.code) {
-          hideLoadingIfShown();
-          wx.showToast({
-            title: '获取登录凭证失败',
-            icon: 'none',
-            duration: 2000
-          });
-          return;
-        }
-
-        api.user.wechatLogin({ code: res.code })
-          .then(data => {
-            hideLoadingIfShown();
-            if (!this.isPageActive) return;
-
-            if (isLogEnabled()) {
-              console.log('[Login] 微信登录成功:', data);
-            }
-
-            app.login(data.user, data.token);
-
-            wx.showToast({
-              title: '登录成功',
-              icon: 'success',
-              duration: 1500
-            });
-
-            setTimeout(() => {
-              if (this.isPageActive) {
-                wx.switchTab({
-                  url: '/pages/index/index'
-                });
-              }
-            }, 1500);
-          })
-          .catch(err => {
-            hideLoadingIfShown();
-            if (!this.isPageActive) return;
-
-            if (isLogEnabled()) {
-              console.error('[Login] 微信登录失败:', err);
-            }
-
-            const errorMsg = err.message || '微信登录失败，请重试';
-            wx.showToast({
-              title: errorMsg,
-              icon: 'none',
-              duration: 2000
-            });
-          });
-      },
-      fail: (err) => {
-        if (this.loginTimeoutTimer) {
-          clearTimeout(this.loginTimeoutTimer);
-          this.loginTimeoutTimer = null;
-        }
-
-        hideLoadingIfShown();
-        if (!this.isPageActive) return;
-
-        if (isLogEnabled()) {
-          console.error('[Login] wx.login失败:', err);
-        }
-
-        let errorMsg = '微信登录失败';
-        if (err.errMsg && err.errMsg.includes('timeout')) {
-          errorMsg = '登录超时，请检查网络';
-        } else if (err.errMsg && err.errMsg.includes('fail')) {
-          errorMsg = '微信授权失败，请重试';
-        }
-
+      const code = loginRes.code;
+      if (!code) {
         wx.showToast({
-          title: errorMsg,
+          title: '获取登录凭证失败',
           icon: 'none',
           duration: 2000
         });
+        return;
       }
-    });
+
+      if (isLogEnabled()) {
+        console.log('[Login] 微信登录code:', code);
+      }
+
+      // 2. 获取用户信息（昵称、头像）
+      wx.showLoading({
+        title: '授权中...',
+        mask: true
+      });
+
+      const userRes = await new Promise((resolve, reject) => {
+        wx.getUserProfile({
+          desc: '用于完善骑手个人资料',
+          success: resolve,
+          fail: reject
+        });
+      });
+
+      if (!this.isPageActive) {
+        wx.hideLoading();
+        return;
+      }
+
+      const userInfo = userRes.userInfo;
+      const nickName = userInfo.nickName;
+      const avatarUrl = userInfo.avatarUrl;
+
+      if (isLogEnabled()) {
+        console.log('[Login] 用户信息:', { nickName, avatarUrl });
+      }
+
+      // 3. 请求后端登录接口
+      wx.showLoading({
+        title: '登录中...',
+        mask: true
+      });
+
+      const data = await api.user.wechatLogin({
+        code: code,
+        nickName: nickName,
+        avatar: avatarUrl
+      });
+
+      if (!this.isPageActive) {
+        wx.hideLoading();
+        return;
+      }
+
+      wx.hideLoading();
+
+      if (isLogEnabled()) {
+        console.log('[Login] 微信登录成功:', data);
+      }
+
+      app.login(data.user, data.token);
+
+      wx.showToast({
+        title: '登录成功',
+        icon: 'success',
+        duration: 1500
+      });
+
+      setTimeout(() => {
+        if (this.isPageActive) {
+          wx.switchTab({
+            url: '/pages/index/index'
+          });
+        }
+      }, 1500);
+
+    } catch (err) {
+      wx.hideLoading();
+      if (!this.isPageActive) return;
+
+      if (isLogEnabled()) {
+        console.error('[Login] 微信登录失败:', err);
+      }
+
+      let errorMsg = '微信登录失败，请重试';
+      if (err.errMsg) {
+        if (err.errMsg.includes('getUserProfile:fail auth deny')) {
+          errorMsg = '授权取消，请重新点击';
+        } else if (err.errMsg.includes('timeout')) {
+          errorMsg = '登录超时，请检查网络';
+        } else if (err.errMsg.includes('fail')) {
+          errorMsg = '微信授权失败，请重试';
+        }
+      } else if (err.message) {
+        errorMsg = err.message;
+      }
+
+      wx.showToast({
+        title: errorMsg,
+        icon: 'none',
+        duration: 2000
+      });
+    }
   }
 });
