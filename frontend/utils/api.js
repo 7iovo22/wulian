@@ -8,6 +8,7 @@ module.exports = {
     updateUserInfo: (data) => put('/api/user/info', data),
     getContacts: () => get('/api/user/contacts'),
     addContact: (data) => post('/api/user/contacts', data),
+    updateContact: (data) => put('/api/user/contacts', data),
     deleteContact: (id) => del(`/api/user/contacts/${id}`)
   },
 

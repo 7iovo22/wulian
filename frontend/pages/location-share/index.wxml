@@ -1,0 +1,167 @@
+<view class="container">
+  <view class="tab-bar">
+    <view 
+      class="tab-item {{activeTab === 'share' ? 'active' : ''}}" 
+      bindtap="switchTab" 
+      data-tab="share"
+    >
+      <text>分享位置</text>
+    </view>
+    <view 
+      class="tab-item {{activeTab === 'history' ? 'active' : ''}}" 
+      bindtap="switchTab" 
+      data-tab="history"
+    >
+      <text>分享记录</text>
+    </view>
+  </view>
+
+  <view class="map-section" wx:if="{{activeTab === 'share'}}">
+    <view class="map-container">
+      <view class="map-loading" wx:if="{{isMapLoading}}">
+        <view class="loading-icon">⟳</view>
+        <text class="loading-text">加载地图中...</text>
+      </view>
+      <map 
+        class="map" 
+        id="locationMap"
+        longitude="{{currentLocation.longitude}}" 
+        latitude="{{currentLocation.latitude}}" 
+        scale="16" 
+        markers="{{markers}}"
+        show-location="{{true}}"
+        bindregionchange="onMapRegionChange"
+        bindmarkertap="onMarkerTap"
+        style="display: {{isMapLoading ? 'none' : 'block'}};"
+      ></map>
+    </view>
+
+    <view class="location-info">
+      <view class="info-header">
+        <view class="info-icon">📍</view>
+        <view class="info-content">
+          <view class="info-title">当前位置</view>
+          <view class="info-address">{{desensitizedAddress}}</view>
+        </view>
+      </view>
+      
+      <view class="info-actions">
+        <view class="action-btn" bindtap="refreshLocation">
+          <view class="action-icon">🔄</view>
+          <view class="action-text">刷新位置</view>
+        </view>
+        <view class="action-btn primary" bindtap="openShareModal">
+          <view class="action-icon">📤</view>
+          <view class="action-text">立即分享</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="privacy-tip">
+      <view class="tip-icon">🔒</view>
+      <text class="tip-text">位置信息已自动脱敏处理，请放心分享</text>
+    </view>
+  </view>
+
+  <view class="history-section" wx:if="{{activeTab === 'history'}}">
+    <view class="history-list" wx:if="{{shareHistory.length > 0}}">
+      <view 
+        class="history-item" 
+        wx:for="{{shareHistory}}" 
+        wx:key="shareId"
+      >
+        <view class="history-header">
+          <view class="history-location">
+            <view class="location-icon">📍</view>
+            <text class="location-text">{{item.desensitizedAddress}}</text>
+          </view>
+          <view class="history-status {{item.status}}">
+            {{item.status === 'active' ? '分享中' : '已结束'}}
+          </view>
+        </view>
+        <view class="history-info">
+          <view class="info-row">
+            <text class="info-label">创建时间</text>
+            <text class="info-value">{{item.createTime}}</text>
+          </view>
+          <view class="info-row">
+            <text class="info-label">有效期</text>
+            <text class="info-value">{{item.duration}}小时</text>
+          </view>
+          <view class="info-row">
+            <text class="info-label">访问次数</text>
+            <text class="info-value">{{item.viewCount}}次</text>
+          </view>
+        </view>
+        <view class="history-actions" wx:if="{{item.status === 'active'}}">
+          <view class="cancel-btn" bindtap="cancelShare" data-share-id="{{item.shareId}}">
+            取消分享
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:else>
+      <view class="empty-icon">📍</view>
+      <view class="empty-text">暂无分享记录</view>
+      <view class="empty-hint">点击上方「分享位置」创建新分享</view>
+    </view>
+  </view>
+
+  <view class="share-modal" wx:if="{{showShareModal}}">
+    <view class="modal-mask" bindtap="closeShareModal"></view>
+    <view class="modal-content">
+      <view class="share-content">
+        <view class="modal-header">
+          <text class="modal-title">分享位置</text>
+          <view class="modal-close" bindtap="closeShareModal">✕</view>
+        </view>
+        
+        <view class="share-map-preview">
+          <map 
+            class="preview-map"
+            longitude="{{currentLocation.longitude}}" 
+            latitude="{{currentLocation.latitude}}" 
+            scale="15" 
+            markers="{{markers}}"
+            show-location="{{false}}"
+            enable-zoom="{{true}}"
+            enable-scroll="{{true}}"
+          ></map>
+        </view>
+
+        <view class="share-info">
+          <view class="share-location">
+            <view class="location-icon">📍</view>
+            <text class="location-text">{{desensitizedAddress}}</text>
+          </view>
+        </view>
+
+        <view class="duration-section">
+          <text class="section-label">分享有效期</text>
+          <view class="duration-picker" bindtap="showDurationPicker">
+            <text>{{selectedDuration}}小时</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </view>
+
+        <view class="link-section">
+          <text class="section-label">分享链接</text>
+          <view class="link-box">
+            <text class="link-text ellipsis">{{shareLink}}</text>
+            <view class="copy-btn" bindtap="copyShareLink">复制</view>
+          </view>
+          <view class="expire-info">
+            <view class="expire-icon">⏱️</view>
+            <text class="expire-text">链接将在{{selectedDuration}}小时后自动失效</text>
+          </view>
+        </view>
+
+        <view class="modal-actions">
+          <button class="modal-btn secondary" bindtap="closeShareModal">取消</button>
+          <button class="modal-btn primary" bindtap="createShare">确认分享</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

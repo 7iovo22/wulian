@@ -5,9 +5,9 @@
       <view class="user-card">
         <image src="{{userInfo.avatar || 'https://picsum.photos/120/120'}}" mode="aspectFill" class="user-avatar"></image>
         <view class="user-info">
-          <view class="user-name">{{userInfo.nickname || '骑手'}}</view>
-          <view class="user-phone">{{userInfo.phone || '请绑定手机号'}}</view>
-        </view>
+        <view class="user-name">{{userInfo.nickname || '骑手'}}</view>
+        <view class="user-phone" bindtap="editUserInfo">{{userInfo.phone || '请绑定手机号'}}</view>
+      </view>
         <view class="edit-btn" bindtap="editUserInfo">
           <text class="edit-icon">✏️</text>
         </view>
@@ -16,7 +16,7 @@
   </view>
 
   <view class="stats-row">
-    <view class="stat-card" bindtap="goToReport">
+    <view class="stat-card" bindtap="goToRides">
       <view class="stat-value">{{stats.rides}}</view>
       <view class="stat-label">累计骑行</view>
     </view>

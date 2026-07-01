@@ -1,0 +1,135 @@
+<view class="container">
+  <view class="loading-overlay" wx:if="{{isLoading}}">
+    <view class="loading-box">
+      <view class="loading-icon">⟳</view>
+      <text class="loading-text">加载报告中...</text>
+    </view>
+  </view>
+
+  <block wx:if="{{!isLoading && reportData}}">
+    <view class="report-card">
+      <view class="report-header">
+        <view class="report-title">{{reportData.title}}</view>
+        <view class="report-subtitle">{{reportData.generateTime}}</view>
+      </view>
+
+      <view class="report-body">
+        <view class="section" wx:if="{{reportData.type === 'daily'}}">
+          <view class="section-title">📊 今日概览</view>
+          <view class="summary-grid">
+            <view class="summary-item">
+              <view class="summary-value">{{reportData.stats.totalRides}}</view>
+              <view class="summary-label">骑行次数</view>
+            </view>
+            <view class="summary-item">
+              <view class="summary-value">{{reportData.stats.totalDistance}}km</view>
+              <view class="summary-label">总里程</view>
+            </view>
+            <view class="summary-item">
+              <view class="summary-value">{{reportData.stats.avgSpeed}}km/h</view>
+              <view class="summary-label">平均速度</view>
+            </view>
+            <view class="summary-item">
+              <view class="summary-value">{{reportData.stats.eventCount}}</view>
+              <view class="summary-label">安全事件</view>
+            </view>
+          </view>
+        </view>
+
+        <view class="section" wx:if="{{reportData.type === 'event'}}">
+          <view class="section-title">🎯 事件概览</view>
+          <view class="event-summary">
+            <view class="event-info">
+              <text class="info-label">风险等级</text>
+              <text class="info-value {{reportData.riskLevel}}">{{reportData.riskLevel === 'high' ? '高危' : reportData.riskLevel === 'medium' ? '中危' : '低危'}}</text>
+            </view>
+            <view class="event-info">
+              <text class="info-label">风险评分</text>
+              <text class="info-value">{{reportData.riskScore}}分</text>
+            </view>
+            <view class="event-info">
+              <text class="info-label">事件时间</text>
+              <text class="info-value">{{reportData.eventTime}}</text>
+            </view>
+            <view class="event-info">
+              <text class="info-label">事件地点</text>
+              <text class="info-value">{{reportData.location}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="section" wx:if="{{reportData.timeline && reportData.timeline.length > 0}}">
+          <view class="section-title">🎬 时间线</view>
+          <view class="timeline">
+            <view class="timeline-item" wx:for="{{reportData.timeline}}" wx:key="time">
+              <view class="timeline-time">{{item.time}}</view>
+              <view class="timeline-event">{{item.event}}</view>
+            </view>
+          </view>
+        </view>
+
+        <view class="section" wx:if="{{reportData.events && reportData.events.length > 0}}">
+          <view class="section-title">⚠️ 安全事件</view>
+          <view class="event-list">
+            <view class="event-item" wx:for="{{reportData.events}}" wx:key="id">
+              <view class="event-type">{{item.typeText}}</view>
+              <view class="event-content">{{item.content}}</view>
+              <view class="event-meta">{{item.time}} · {{item.location}}</view>
+            </view>
+          </view>
+        </view>
+
+        <view class="section" wx:if="{{reportData.health}}">
+          <view class="section-title">❤️ 健康数据</view>
+          <view class="health-grid">
+            <view class="health-item">
+              <view class="health-icon">❤️</view>
+              <view class="health-value">{{reportData.health.avgHeartRate}}bpm</view>
+              <view class="health-label">平均心率</view>
+            </view>
+            <view class="health-item">
+              <view class="health-icon">🌡️</view>
+              <view class="health-value">{{reportData.health.avgTemperature}}℃</view>
+              <view class="health-label">平均体温</view>
+            </view>
+          </view>
+        </view>
+
+        <view class="section" wx:if="{{reportData.aiAnalysis}}">
+          <view class="section-title">🤖 AI智能分析</view>
+          <view class="ai-content">{{reportData.aiAnalysis}}</view>
+        </view>
+
+        <view class="section">
+          <view class="section-title">💡 安全建议</view>
+          <view class="recommendation-list">
+            <view class="recommendation-item" wx:for="{{reportData.recommendations}}" wx:key="*this">
+              <view class="rec-number">{{index + 1}}</view>
+              <view class="rec-text">{{item}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="report-footer">
+        <view class="footer-text">报告生成于 {{reportData.generateTime}}</view>
+        <view class="footer-badge">骑安智盔安全系统</view>
+      </view>
+    </view>
+  </block>
+
+  <view class="bottom-actions">
+    <button class="action-btn secondary" bindtap="copyReport">
+      <text class="btn-icon">📋</text>
+      <text>复制</text>
+    </button>
+    <button class="action-btn secondary" bindtap="saveReport">
+      <text class="btn-icon">💾</text>
+      <text>保存</text>
+    </button>
+    <button class="action-btn primary" bindtap="shareReport">
+      <text class="btn-icon">📤</text>
+      <text>分享</text>
+    </button>
+  </view>
+</view>

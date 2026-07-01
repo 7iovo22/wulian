@@ -1,0 +1,144 @@
+<view class="container">
+  <view class="intro-section">
+    <view class="intro-card">
+      <view class="intro-icon">🛡️</view>
+      <view class="intro-title">骑安智盔</view>
+      <view class="intro-desc">AI驱动的智能安全监护平台</view>
+    </view>
+  </view>
+
+  <view class="service-section">
+    <view class="section-title">💡 服务宗旨</view>
+    <view class="card">
+      <view class="service-item">
+        <view class="service-number">01</view>
+        <view class="service-content">
+          <view class="service-title">安全第一</view>
+          <view class="service-desc">以骑手安全为核心，提供全方位的安全保障服务</view>
+        </view>
+      </view>
+      <view class="service-item">
+        <view class="service-number">02</view>
+        <view class="service-content">
+          <view class="service-title">智能守护</view>
+          <view class="service-desc">利用AI技术实现智能监测、预警和救援</view>
+        </view>
+      </view>
+      <view class="service-item">
+        <view class="service-number">03</view>
+        <view class="service-content">
+          <view class="service-title">数据透明</view>
+          <view class="service-desc">提供完整的数据报告，让安全状况一目了然</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="feedback-section">
+    <view class="section-title">📝 意见反馈</view>
+    <view class="card">
+      <view class="form-item">
+        <view class="form-label">问题类型</view>
+        <view class="type-options">
+          <view 
+            class="type-option {{formData.type === item.value ? 'active' : ''}}" 
+            wx:for="{{typeOptions}}" 
+            wx:key="value"
+            bindtap="setType" 
+            data-type="{{item.value}}"
+          >
+            {{item.label}}
+          </view>
+        </view>
+      </view>
+
+      <view class="form-item">
+        <view class="form-label">问题描述</view>
+        <textarea 
+          class="form-textarea" 
+          placeholder="请详细描述您遇到的问题或建议..." 
+          value="{{formData.description}}" 
+          bindinput="onDescriptionInput"
+          maxlength="500"
+        />
+        <view class="textarea-count">{{formData.description.length}}/500</view>
+      </view>
+
+      <view class="form-item">
+        <view class="form-label">联系方式</view>
+        <input 
+          class="form-input" 
+          placeholder="请输入手机号或微信号" 
+          value="{{formData.contact}}" 
+          bindinput="onContactInput" 
+        />
+      </view>
+
+      <view class="form-item">
+        <view class="form-label">图片上传</view>
+        <view class="image-upload-area">
+          <view class="image-list">
+            <view 
+              class="image-item" 
+              wx:for="{{formData.images}}" 
+              wx:key="index"
+              bindtap="previewImage"
+              data-index="{{index}}"
+            >
+              <image src="{{item}}" mode="aspectFill" class="uploaded-image"></image>
+              <view class="image-delete" bindtap="deleteImage" data-index="{{index}}">✕</view>
+            </view>
+            <view 
+              class="image-add" 
+              wx:if="{{formData.images.length < 9}}"
+              bindtap="chooseImages"
+            >
+              <text class="add-icon">+</text>
+              <text class="add-text">添加图片</text>
+            </view>
+          </view>
+          <view class="upload-tip">最多上传9张图片</view>
+        </view>
+      </view>
+
+      <button class="submit-btn" bindtap="submitFeedback">提交反馈</button>
+    </view>
+  </view>
+
+  <view class="contact-section">
+    <view class="section-title">📞 联系我们</view>
+    <view class="card">
+      <view class="contact-item">
+        <view class="contact-icon">💬</view>
+        <view class="contact-content">
+          <view class="contact-title">客服热线</view>
+          <view class="contact-value">400-888-8888</view>
+        </view>
+      </view>
+      <view class="contact-item">
+        <view class="contact-icon">📧</view>
+        <view class="contact-content">
+          <view class="contact-title">邮箱地址</view>
+          <view class="contact-value">support@qiansan.com</view>
+        </view>
+      </view>
+      <view class="contact-item">
+        <view class="contact-icon">🕐</view>
+        <view class="contact-content">
+          <view class="contact-title">服务时间</view>
+          <view class="contact-value">7x24小时在线</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="success-modal" wx:if="{{showSuccess}}">
+    <view class="modal-mask" bindtap="hideSuccess"></view>
+    <view class="success-content">
+      <view class="success-icon">✅</view>
+      <view class="success-title">提交成功</view>
+      <view class="success-desc">感谢您的反馈，我们会尽快处理并回复您</view>
+      <button class="success-btn" bindtap="hideSuccess">知道了</button>
+    </view>
+  </view>
+</view>

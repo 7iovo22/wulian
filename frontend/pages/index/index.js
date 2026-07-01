@@ -171,16 +171,14 @@ Page({
   },
 
   goToLocation: function () {
-    wx.showToast({
-      title: '位置分享功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/location-share/index'
     });
   },
 
   goToReport: function () {
-    wx.showToast({
-      title: '报告功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/daily-report/index'
     });
   },
 

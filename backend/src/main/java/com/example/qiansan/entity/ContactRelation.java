@@ -22,5 +22,7 @@ public class ContactRelation {
 
     private String contactPhone;
 
+    private String relation;
+
     private LocalDateTime createTime;
 }

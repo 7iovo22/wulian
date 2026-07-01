@@ -1,0 +1,91 @@
+var eventTypeMap = {
+  fall: '摔倒检测',
+  fatigue: '疲劳预警',
+  speed: '超速警告',
+  heat: '中暑预警',
+  danger: '危险驾驶',
+  collision: '碰撞预警',
+  sos: '紧急求助',
+  temperature: '体温预警',
+  heartrate: '心率预警',
+  zone: '电子围栏预警'
+};
+
+var eventTypeIconMap = {
+  fall: '🛡️',
+  fatigue: '😴',
+  speed: '⚡',
+  heat: '🌡️',
+  danger: '⚠️',
+  collision: '💥',
+  sos: '🚨',
+  temperature: '🌡️',
+  heartrate: '❤️',
+  zone: '📍'
+};
+
+var eventTypeColorMap = {
+  fall: '#DC143C',
+  fatigue: '#FFA500',
+  speed: '#FFA500',
+  heat: '#FF6347',
+  danger: '#DC143C',
+  collision: '#DC143C',
+  sos: '#DC143C',
+  temperature: '#FF6347',
+  heartrate: '#FF6347',
+  zone: '#1E90FF'
+};
+
+var eventLevelColorMap = {
+  normal: '#4CAF50',
+  warning: '#FFB74D',
+  danger: '#E57373'
+};
+
+var fatigueLevelTextMap = {
+  none: '无',
+  light: '轻度',
+  medium: '中度',
+  heavy: '重度'
+};
+
+var fatigueLevelColorMap = {
+  none: '#4CAF50',
+  light: '#FFB74D',
+  medium: '#FF8A65',
+  heavy: '#E57373'
+};
+
+function getEventTypeName(type) {
+  return eventTypeMap[type] || type;
+}
+
+function getEventTypeIcon(type) {
+  return eventTypeIconMap[type] || '⚠️';
+}
+
+function getEventTypeColor(type) {
+  return eventTypeColorMap[type] || '#78909C';
+}
+
+function getEventLevelColor(level) {
+  return eventLevelColorMap[level] || '#78909C';
+}
+
+function getFatigueLevelText(level) {
+  return fatigueLevelTextMap[level] || level;
+}
+
+function getFatigueLevelColor(level) {
+  return fatigueLevelColorMap[level] || '#78909C';
+}
+
+module.exports = {
+  getEventTypeName: getEventTypeName,
+  getEventTypeIcon: getEventTypeIcon,
+  getEventTypeColor: getEventTypeColor,
+  getEventLevelColor: getEventLevelColor,
+  getFatigueLevelText: getFatigueLevelText,
+  getFatigueLevelColor: getFatigueLevelColor
+};

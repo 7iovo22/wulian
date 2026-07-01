@@ -181,9 +181,25 @@ public class UserServiceImpl implements UserService {
         contact.setRiderId(request.getRiderId());
         contact.setContactName(request.getContactName());
         contact.setContactPhone(request.getContactPhone());
+        contact.setRelation(request.getRelation());
         contact.setCreateTime(LocalDateTime.now());
         
         contactRelationMapper.insert(contact);
+        return contact;
+    }
+
+    @Override
+    @Transactional
+    public ContactRelation updateContact(AddContactRequest request) {
+        ContactRelation contact = contactRelationMapper.selectById(request.getId());
+        if (contact == null) {
+            throw new IllegalArgumentException("联系人不存在");
+        }
+        contact.setContactName(request.getContactName());
+        contact.setContactPhone(request.getContactPhone());
+        contact.setRelation(request.getRelation());
+        
+        contactRelationMapper.updateById(contact);
         return contact;
     }
 

@@ -1,0 +1,309 @@
+<wxs src="./utils.wxs" module="utils" />
+<view class="container">
+  <view class="date-selector">
+    <scroll-view scroll-x class="date-scroll">
+      <view class="date-list">
+        <view 
+          class="date-item {{selectedDateIndex === index ? 'active' : ''}}"
+          wx:for="{{dateList}}"
+          wx:key="value"
+          data-index="{{index}}"
+          bindtap="onDateSelect"
+        >
+          <view class="date-label">{{item.label}}</view>
+          <view class="date-weekday">{{item.weekday}}</view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="loading-overlay" wx:if="{{isLoading}}">
+    <view class="loading-box">
+      <view class="loading-icon">⟳</view>
+      <text class="loading-text">正在生成日报...</text>
+    </view>
+  </view>
+
+  <block wx:if="{{!isLoading && reportData}}">
+    <view class="score-section card">
+      <view class="score-main">
+        <view class="score-ring" style="background: conic-gradient({{safetyScoreColor}} 0deg, {{safetyScoreColor}} {{safetyScore * 3.6}}deg, #E1E5E9 {{safetyScore * 3.6}}deg, #E1E5E9 360deg);">
+          <view class="score-inner">
+            <view class="score-value">{{safetyScore}}</view>
+            <view class="score-unit">分</view>
+          </view>
+        </view>
+        <view class="score-info">
+          <view class="score-label">今日安全评分</view>
+          <view class="score-level" style="color: {{safetyScoreColor}};">{{safetyScoreText}}</view>
+          <view class="score-desc">击败了全国 78% 的骑手</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="tab-bar">
+      <view 
+        class="tab-item {{activeTab === 'overview' ? 'active' : ''}}" 
+        bindtap="switchTab" 
+        data-tab="overview"
+      >
+        <text>总览</text>
+      </view>
+      <view 
+        class="tab-item {{activeTab === 'events' ? 'active' : ''}}" 
+        bindtap="switchTab" 
+        data-tab="events"
+      >
+        <text>事件</text>
+      </view>
+      <view 
+        class="tab-item {{activeTab === 'health' ? 'active' : ''}}" 
+        bindtap="switchTab" 
+        data-tab="health"
+      >
+        <text>健康</text>
+      </view>
+      <view 
+        class="tab-item {{activeTab === 'device' ? 'active' : ''}}" 
+        bindtap="switchTab" 
+        data-tab="device"
+      >
+        <text>设备</text>
+      </view>
+    </view>
+
+    <view class="tab-content" wx:if="{{activeTab === 'overview'}}">
+      <view class="stats-grid card">
+        <view class="stat-item">
+          <view class="stat-icon">🚴</view>
+          <view class="stat-value">{{statsData.totalRides}}</view>
+          <view class="stat-label">骑行次数</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-icon">📍</view>
+          <view class="stat-value">{{statsData.totalDistance}}</view>
+          <view class="stat-label">总里程(km)</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-icon">⏱️</view>
+          <view class="stat-value">{{statsData.totalDuration}}</view>
+          <view class="stat-label">时长(分钟)</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-icon">⚡</view>
+          <view class="stat-value">{{statsData.avgSpeed}}</view>
+          <view class="stat-label">均速(km/h)</view>
+        </view>
+      </view>
+
+      <view class="section-card card">
+        <view class="section-title">
+          <text class="title-icon">📊</text>
+          <text class="title-text">本周趋势</text>
+        </view>
+        <view class="trend-chart">
+          <view class="chart-bars">
+            <view 
+              class="chart-bar" 
+              wx:for="{{trendData.weekScore}}" 
+              wx:key="index"
+            >
+              <view 
+                class="bar-inner" 
+                style="height: {{item}}%; background: {{item >= 80 ? '#4CAF50' : item >= 60 ? '#FFB74D' : '#E57373'}};"
+              ></view>
+              <view class="bar-value">{{item}}</view>
+            </view>
+          </view>
+          <view class="chart-labels">
+            <view class="chart-label" wx:for="{{trendData.weekLabels}}" wx:key="*this">{{item}}</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="section-card card">
+        <view class="section-title">
+          <text class="title-icon">🤖</text>
+          <text class="title-text">AI智能总结</text>
+          <view class="ai-badge {{isAiMode ? 'active' : 'mock'}}">
+            {{isAiMode ? 'AI生成' : '模板占位'}}
+          </view>
+        </view>
+        
+        <view class="ai-content" wx:if="{{aiSummary}}">
+          <view class="summary-text {{showFullSummary ? '' : 'truncated'}}">
+            {{aiSummary}}
+          </view>
+          <view class="toggle-btn" bindtap="toggleSummary" wx:if="{{aiSummary.length > 100}}">
+            {{showFullSummary ? '收起' : '展开全文'}}
+          </view>
+        </view>
+        
+        <view class="ai-mock" wx:else>
+          <view class="mock-text">AI分析服务暂不可用，当前显示为模板报告</view>
+          <button class="generate-btn" bindtap="generateReport" loading="{{isGenerating}}">
+            {{isGenerating ? '生成中...' : '生成AI日报'}}
+          </button>
+        </view>
+      </view>
+
+      <view class="section-card card">
+        <view class="section-title">
+          <text class="title-icon">💡</text>
+          <text class="title-text">安全建议</text>
+        </view>
+        <view class="recommendation-list">
+          <view 
+            class="recommendation-item" 
+            wx:for="{{reportData.recommendations}}" 
+            wx:key="*this"
+          >
+            <view class="rec-icon">✓</view>
+            <view class="rec-text">{{item}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="tab-content" wx:if="{{activeTab === 'events'}}">
+      <view class="events-section card">
+        <view class="section-title">
+          <text class="title-icon">⚠️</text>
+          <text class="title-text">安全事件</text>
+          <view class="event-count">{{eventList.length}}条</view>
+        </view>
+        
+        <view class="event-list" wx:if="{{eventList.length > 0}}">
+          <view 
+            class="event-item" 
+            wx:for="{{eventList}}" 
+            wx:key="id"
+            bindtap="viewEventDetail"
+            data-event="{{item}}"
+          >
+            <view class="event-icon" style="background: {{utils.getEventTypeColor(item.type)}};">
+              {{utils.getEventTypeIcon(item.type)}}
+            </view>
+            <view class="event-content">
+              <view class="event-header">
+                <text class="event-type">{{utils.getEventTypeName(item.type)}}</text>
+                <text class="event-time">{{item.time}}</text>
+              </view>
+              <view class="event-desc">{{item.content}}</view>
+              <view class="event-location">📍 {{item.location}}</view>
+            </view>
+            <view class="event-level" style="color: {{utils.getEventLevelColor(item.level)}};">
+              {{item.level === 'warning' ? '警告' : '危险'}}
+            </view>
+          </view>
+        </view>
+        
+        <view class="empty-state" wx:else>
+          <view class="empty-icon">✓</view>
+          <view class="empty-text">今日无安全事件</view>
+          <view class="empty-hint">您的骑行状态非常安全</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="tab-content" wx:if="{{activeTab === 'health'}}">
+      <view class="health-section card">
+        <view class="section-title">
+          <text class="title-icon">❤️</text>
+          <text class="title-text">健康数据</text>
+        </view>
+        
+        <view class="health-grid">
+          <view class="health-item">
+            <view class="health-icon heart">❤️</view>
+            <view class="health-info">
+              <view class="health-value">{{healthData.avgHeartRate}}</view>
+              <view class="health-label">平均心率</view>
+              <view class="health-unit">bpm</view>
+            </view>
+          </view>
+          <view class="health-item">
+            <view class="health-icon temp">🌡️</view>
+            <view class="health-info">
+              <view class="health-value">{{healthData.avgTemperature}}</view>
+              <view class="health-label">平均体温</view>
+              <view class="health-unit">℃</view>
+            </view>
+          </view>
+          <view class="health-item">
+            <view class="health-icon fatigue">😴</view>
+            <view class="health-info">
+              <view class="health-value" style="color: {{utils.getFatigueLevelColor(healthData.fatigueLevel)}};">
+                {{utils.getFatigueLevelText(healthData.fatigueLevel)}}
+              </view>
+              <view class="health-label">疲劳等级</view>
+              <view class="health-unit"></view>
+            </view>
+          </view>
+          <view class="health-item">
+            <view class="health-icon max">📈</view>
+            <view class="health-info">
+              <view class="health-value">{{healthData.maxHeartRate}}</view>
+              <view class="health-label">最高心率</view>
+              <view class="health-unit">bpm</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="tab-content" wx:if="{{activeTab === 'device'}}">
+      <view class="device-section card">
+        <view class="section-title">
+          <text class="title-icon">🛡️</text>
+          <text class="title-text">设备状态</text>
+        </view>
+        
+        <view class="device-info">
+          <view class="device-row">
+            <text class="device-label">在线时长</text>
+            <text class="device-value">{{deviceStatus.onlineTime}}分钟</text>
+          </view>
+          <view class="device-row">
+            <text class="device-label">离线时长</text>
+            <text class="device-value">{{deviceStatus.offlineTime}}分钟</text>
+          </view>
+          <view class="device-row">
+            <text class="device-label">剩余电量</text>
+            <view class="battery-info">
+              <view class="battery-bar">
+                <view class="battery-fill" style="width: {{deviceStatus.batteryLevel}}%;"></view>
+              </view>
+              <text class="battery-text">{{deviceStatus.batteryLevel}}%</text>
+            </view>
+          </view>
+          <view class="device-row">
+            <text class="device-label">固件版本</text>
+            <text class="device-value">{{deviceStatus.firmwareVersion}}</text>
+          </view>
+          <view class="device-row">
+            <text class="device-label">传感器状态</text>
+            <text class="device-value status-{{deviceStatus.sensorStatus}}">
+              {{deviceStatus.sensorStatus === 'normal' ? '正常' : '异常'}}
+            </text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="bottom-actions">
+      <button class="action-btn secondary" bindtap="copyReport">
+        <text class="btn-icon">📋</text>
+        <text>复制</text>
+      </button>
+      <button class="action-btn secondary" bindtap="saveReportLocal">
+        <text class="btn-icon">💾</text>
+        <text>保存</text>
+      </button>
+      <button class="action-btn primary" bindtap="viewFullReport">
+        <text class="btn-icon">📄</text>
+        <text>完整报告</text>
+      </button>
+    </view>
+  </block>
+</view>

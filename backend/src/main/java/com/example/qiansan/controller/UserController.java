@@ -88,6 +88,13 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success(contact));
     }
 
+    @PutMapping("/contacts")
+    public ResponseEntity<ApiResponse<ContactRelation>> updateContact(@RequestBody AddContactRequest request) {
+        log.info("Update contact request for id {}", request.getId());
+        ContactRelation contact = userService.updateContact(request);
+        return ResponseEntity.ok(ApiResponse.success(contact));
+    }
+
     @DeleteMapping("/contacts/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteContact(@PathVariable Long id) {
         log.info("Delete contact request for id {}", id);

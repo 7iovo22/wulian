@@ -9,7 +9,13 @@
     "pages/sos/index",
     "pages/warning/index",
     "pages/health/index",
-    "pages/contacts/index"
+    "pages/contacts/index",
+    "pages/location-share/index",
+    "pages/daily-report/index",
+    "pages/event-report/index",
+    "pages/report-preview/index",
+    "pages/settings/index",
+    "pages/help/index"
   ],
   "window": {
     "backgroundColor": "#F0F4F8",

@@ -24,7 +24,7 @@ Page({
   loadUserInfo: function () {
     const userInfo = wx.getStorageSync('userInfo');
     const deviceInfo = wx.getStorageSync('deviceInfo');
-    
+
     this.setData({
       userInfo: userInfo ? JSON.parse(userInfo) : {},
       hasDevice: !!deviceInfo
@@ -32,9 +32,8 @@ Page({
   },
 
   editUserInfo: function () {
-    wx.showToast({
-      title: '编辑功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/settings/index'
     });
   },
 
@@ -57,9 +56,14 @@ Page({
   },
 
   goToReport: function () {
-    wx.showToast({
-      title: '报告功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/daily-report/index'
+    });
+  },
+
+  goToRides: function () {
+    wx.navigateTo({
+      url: '/pages/daily-report/index'
     });
   },
 
@@ -82,16 +86,14 @@ Page({
   },
 
   goToSettings: function () {
-    wx.showToast({
-      title: '设置功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/settings/index'
     });
   },
 
   goToHelp: function () {
-    wx.showToast({
-      title: '帮助功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/help/index'
     });
   },
 

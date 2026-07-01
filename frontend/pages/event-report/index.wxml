@@ -1,0 +1,193 @@
+<view class="container">
+  <view class="loading-overlay" wx:if="{{isLoading}}">
+    <view class="loading-box">
+      <view class="loading-icon">⟳</view>
+      <text class="loading-text">正在生成报告...</text>
+    </view>
+  </view>
+
+  <block wx:if="{{!isLoading && reportData}}">
+    <view class="report-header">
+      <view class="report-badge {{reportData.riskLevel}}">
+        {{reportData.riskLevel === 'high' ? '高危' : reportData.riskLevel === 'medium' ? '中危' : '低危'}}
+      </view>
+      <view class="report-title">{{reportData.title}}</view>
+      <view class="report-meta">
+        <text class="meta-item">🕐 {{reportData.eventTime}}</text>
+        <text class="meta-item">📍 {{reportData.location}}</text>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-icon">🎬</text>
+        <text class="section-title">事件过程还原</text>
+      </view>
+      <view class="timeline">
+        <view 
+          class="timeline-item" 
+          wx:for="{{reportData.timeline}}" 
+          wx:key="time"
+        >
+          <view class="timeline-dot" style="background: {{item.type === 'warning' ? '#FFB74D' : item.type === 'danger' ? '#E57373' : '#4CAF50'}};"></view>
+          <view class="timeline-line" wx:if="{{index < reportData.timeline.length - 1}}"></view>
+          <view class="timeline-content">
+            <view class="timeline-time">{{item.time}}</view>
+            <view class="timeline-event">{{item.event}}</view>
+            <view class="timeline-data" wx:if="{{item.data}}">
+              <text class="data-label">数据：</text>
+              <text class="data-value">{{item.data}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-icon">📊</text>
+        <text class="section-title">风险评估</text>
+      </view>
+      <view class="risk-analysis">
+        <view class="risk-score-card">
+          <view class="score-circle" style="background: conic-gradient({{riskColor}} 0deg, {{riskColor}} {{reportData.riskScore * 3.6}}deg, #E1E5E9 {{reportData.riskScore * 3.6}}deg, #E1E5E9 360deg);">
+            <view class="score-inner">
+              <view class="score-value">{{reportData.riskScore}}</view>
+              <view class="score-label">风险评分</view>
+            </view>
+          </view>
+        </view>
+        <view class="risk-factors">
+          <view class="risk-factor" wx:for="{{reportData.riskFactors}}" wx:key="name">
+            <view class="factor-bar">
+              <view class="factor-fill" style="width: {{item.score}}%; background: {{item.score >= 80 ? '#E57373' : item.score >= 50 ? '#FFB74D' : '#4CAF50'}};"></view>
+            </view>
+            <view class="factor-info">
+              <text class="factor-name">{{item.name}}</text>
+              <text class="factor-score">{{item.score}}%</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-icon">📈</text>
+        <text class="section-title">遥测数据证据链</text>
+      </view>
+      <view class="telemetry-data">
+        <view class="data-group">
+          <view class="data-item">
+            <view class="data-icon">📏</view>
+            <view class="data-info">
+              <view class="data-value">{{reportData.telemetry.maxAcceleration}}g</view>
+              <view class="data-label">最大加速度</view>
+            </view>
+          </view>
+          <view class="data-item">
+            <view class="data-icon">🔄</view>
+            <view class="data-info">
+              <view class="data-value">{{reportData.telemetry.maxRotation}}°/s</view>
+              <view class="data-label">最大角速度</view>
+            </view>
+          </view>
+        </view>
+        <view class="data-group">
+          <view class="data-item">
+            <view class="data-icon">❤️</view>
+            <view class="data-info">
+              <view class="data-value">{{reportData.telemetry.heartRate}}bpm</view>
+              <view class="data-label">事发时心率</view>
+            </view>
+          </view>
+          <view class="data-item">
+            <view class="data-icon">🌡️</view>
+            <view class="data-info">
+              <view class="data-value">{{reportData.telemetry.temperature}}℃</view>
+              <view class="data-label">事发时体温</view>
+            </view>
+          </view>
+        </view>
+        <view class="data-group">
+          <view class="data-item">
+            <view class="data-icon">⚡</view>
+            <view class="data-info">
+              <view class="data-value">{{reportData.telemetry.speed}}km/h</view>
+              <view class="data-label">事发时速度</view>
+            </view>
+          </view>
+          <view class="data-item">
+            <view class="data-icon">📱</view>
+            <view class="data-info">
+              <view class="data-value">{{reportData.telemetry.deviceStatus}}</view>
+              <view class="data-label">设备状态</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-icon">🤖</text>
+        <text class="section-title">AI智能分析</text>
+        <view class="ai-badge {{isAiMode ? 'active' : 'mock'}}">
+          {{isAiMode ? 'AI生成' : '模板占位'}}
+        </view>
+      </view>
+      
+      <view class="ai-analysis" wx:if="{{reportData.aiAnalysis}}">
+        <view class="analysis-content">
+          {{reportData.aiAnalysis}}
+        </view>
+      </view>
+      
+      <view class="ai-mock" wx:else>
+        <view class="mock-text">AI分析服务暂不可用</view>
+        <button class="generate-btn" bindtap="generateReport" loading="{{isGenerating}}">
+          {{isGenerating ? '生成中...' : '生成AI分析'}}
+        </button>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-icon">💡</text>
+        <text class="section-title">安全建议</text>
+      </view>
+      <view class="recommendation-list">
+        <view 
+          class="recommendation-item" 
+          wx:for="{{reportData.recommendations}}" 
+          wx:key="*this"
+        >
+          <view class="rec-icon">✓</view>
+          <view class="rec-text">{{item}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="bottom-actions">
+      <button class="action-btn secondary" bindtap="copyReport">
+        <text class="btn-icon">📋</text>
+        <text>复制报告</text>
+      </button>
+      <button class="action-btn secondary" bindtap="saveReport">
+        <text class="btn-icon">💾</text>
+        <text>保存本地</text>
+      </button>
+      <button class="action-btn primary" bindtap="shareReport">
+        <text class="btn-icon">📤</text>
+        <text>分享报告</text>
+      </button>
+    </view>
+  </block>
+
+  <view class="empty-state" wx:if="{{!isLoading && !reportData}}">
+    <view class="empty-icon">📄</view>
+    <view class="empty-text">报告生成失败</view>
+    <view class="empty-hint">请稍后重试</view>
+    <button class="retry-btn" bindtap="loadReport">重新加载</button>
+  </view>
+</view>

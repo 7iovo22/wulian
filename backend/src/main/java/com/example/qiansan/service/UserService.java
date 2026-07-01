@@ -20,6 +20,7 @@ public interface UserService {
     User updateUser(User user);
     List<ContactRelation> getContacts(Long riderId);
     ContactRelation addContact(AddContactRequest request);
+    ContactRelation updateContact(AddContactRequest request);
     void deleteContact(Long id);
     UserResponse adminLogin(AdminLoginRequest request);
 }
