@@ -1,3 +1,5 @@
+const { formatNumber, formatText } = require('../../utils/helpers');
+
 Page({
   data: {
     currentData: {
@@ -22,13 +24,13 @@ Page({
       heartRate: Math.floor(60 + Math.random() * 30),
       temperature: (36.0 + Math.random() * 1.5).toFixed(1)
     };
-    
+
     if (parseFloat(mockData.temperature) > 37.5) {
       this.setData({
         showHeatWarning: true
       });
     }
-    
+
     this.setData({
       currentData: mockData
     });
@@ -37,7 +39,7 @@ Page({
   loadHeartRateChart: function () {
     const labels = [];
     const data = [];
-    
+
     for (let i = 0; i < 24; i++) {
       labels.push(`${i}:00`);
       data.push({
@@ -45,7 +47,7 @@ Page({
         y: ((Math.random() * 40) + 50)
       });
     }
-    
+
     this.setData({
       heartRateData: data,
       chartLabels: labels.filter((_, i) => i % 4 === 0)
@@ -60,7 +62,7 @@ Page({
       { id: 4, time: '07:00', heartRate: 68, temperature: 36.1, status: 'normal' },
       { id: 5, time: '06:00', heartRate: 75, temperature: 37.2, status: 'warning' }
     ];
-    
+
     this.setData({
       historyList: mockHistory
     });

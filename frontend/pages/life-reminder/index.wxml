@@ -1,0 +1,185 @@
+<wxs module="format">
+var formatNumber = function(value) {
+  if (value === null || value === undefined || value === '') {
+    return '--';
+  }
+  var num = parseFloat(value);
+  return isNaN(num) ? '--' : value;
+};
+
+var formatText = function(value, fieldName) {
+  fieldName = fieldName || '';
+  if (value === null || value === undefined || value === '') {
+    return fieldName ? '暂无' + fieldName : '暂无数据';
+  }
+  return value;
+};
+
+var formatTime = function(value) {
+  if (value === null || value === undefined || value === '') {
+    return '--';
+  }
+  return value;
+};
+
+module.exports = {
+  formatNumber: formatNumber,
+  formatText: formatText,
+  formatTime: formatTime
+};
+</wxs>
+<view class="container">
+  <view class="detail-header">
+    <view class="back-btn" bindtap="goBack">
+      <text class="back-icon">←</text>
+    </view>
+    <view class="header-title">生活提醒</view>
+    <view class="placeholder"></view>
+  </view>
+
+  <view class="detail-content">
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-icon">🔔</text>
+        <text class="section-title">提醒列表</text>
+      </view>
+      
+      <view class="reminder-list">
+        <view 
+          class="reminder-item" 
+          wx:for="{{reminderList}}" 
+          wx:key="id"
+        >
+          <view class="reminder-left">
+            <view class="category-tag" style="background: {{getCategoryBg(item.category)}}; color: {{getCategoryColor(item.category)}};">
+              {{getCategoryText(item.category)}}
+            </view>
+            <view class="delivery-status {{item.deliveryStatus === 'delivered' ? 'delivered' : 'pending'}}">
+              {{item.deliveryStatus === 'delivered' ? '已推送' : '未投递'}}
+            </view>
+          </view>
+          
+          <view class="reminder-content">
+            <view class="reminder-title">{{format.formatText(item.title, '提醒标题')}}</view>
+            <view class="reminder-desc">{{format.formatText(item.content, '提醒内容')}}</view>
+            <view class="reminder-time">下次提醒：{{format.formatTime(item.nextRemindTime)}}</view>
+          </view>
+          
+          <view class="reminder-switch">
+            <switch 
+              checked="{{item.enabled}}" 
+              bindchange="onSwitchChange" 
+              data-id="{{item.id}}"
+              color="#4FC3F7"
+            />
+          </view>
+        </view>
+      </view>
+
+      <view class="empty-state" wx:if="{{reminderList.length === 0}}">
+        <view class="empty-icon">🔕</view>
+        <view class="empty-text">暂无提醒</view>
+        <view class="empty-hint">您可以添加生活提醒</view>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-icon">📊</text>
+        <text class="section-title">提醒统计</text>
+      </view>
+      <view class="stats-grid">
+        <view class="stat-card">
+          <view class="stat-num">{{format.formatNumber(stats.total)}}</view>
+          <view class="stat-name">总提醒数</view>
+        </view>
+        <view class="stat-card">
+          <view class="stat-num enabled">{{format.formatNumber(stats.enabled)}}</view>
+          <view class="stat-name">已启用</view>
+        </view>
+        <view class="stat-card">
+          <view class="stat-num disabled">{{format.formatNumber(stats.disabled)}}</view>
+          <view class="stat-name">已关闭</view>
+        </view>
+        <view class="stat-card">
+          <view class="stat-num delivered">{{format.formatNumber(stats.delivered)}}</view>
+          <view class="stat-name">已推送</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-icon">➕</text>
+        <text class="section-title">添加新提醒</text>
+      </view>
+      <view class="add-form">
+        <view class="form-item">
+          <text class="form-label">提醒标题</text>
+          <input 
+            class="form-input" 
+            placeholder="请输入提醒标题" 
+            value="{{newReminder.title}}"
+            bindinput="onTitleInput"
+          />
+        </view>
+        <view class="form-item">
+          <text class="form-label">提醒内容</text>
+          <textarea 
+            class="form-textarea" 
+            placeholder="请输入提醒内容" 
+            value="{{newReminder.content}}"
+            bindinput="onContentInput"
+          />
+        </view>
+        <view class="form-item">
+          <text class="form-label">提醒分类</text>
+          <view class="category-options">
+            <view 
+              class="category-option {{newReminder.category === 'health' ? 'active' : ''}}" 
+              bindtap="selectCategory" 
+              data-category="health"
+            >
+              🏥 健康
+            </view>
+            <view 
+              class="category-option {{newReminder.category === 'safety' ? 'active' : ''}}" 
+              bindtap="selectCategory" 
+              data-category="safety"
+            >
+              🛡️ 安全
+            </view>
+            <view 
+              class="category-option {{newReminder.category === 'daily' ? 'active' : ''}}" 
+              bindtap="selectCategory" 
+              data-category="daily"
+            >
+              📅 日常
+            </view>
+            <view 
+              class="category-option {{newReminder.category === 'emergency' ? 'active' : ''}}" 
+              bindtap="selectCategory" 
+              data-category="emergency"
+            >
+              🚨 紧急
+            </view>
+          </view>
+        </view>
+        <view class="form-item">
+          <text class="form-label">下次提醒时间</text>
+          <picker mode="date" value="{{newReminder.date}}" bindchange="onDateChange">
+            <view class="form-picker">
+              {{format.formatText(newReminder.date, '选择日期')}}
+            </view>
+          </picker>
+          <picker mode="time" value="{{newReminder.time}}" bindchange="onTimeChange">
+            <view class="form-picker">
+              {{format.formatText(newReminder.time, '选择时间')}}
+            </view>
+          </picker>
+        </view>
+        <button class="submit-btn" bindtap="addReminder">添加提醒</button>
+      </view>
+    </view>
+  </view>
+</view>

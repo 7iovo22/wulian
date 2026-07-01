@@ -1,5 +1,6 @@
 const app = getApp();
 const api = require('../../utils/api');
+const { formatNumber, formatText, formatTime } = require('../../utils/helpers');
 
 Page({
   data: {

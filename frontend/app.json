@@ -15,7 +15,10 @@
     "pages/event-report/index",
     "pages/report-preview/index",
     "pages/settings/index",
-    "pages/help/index"
+    "pages/help/index",
+    "pages/safety-detail/index",
+    "pages/ai-analysis/index",
+    "pages/life-reminder/index"
   ],
   "window": {
     "backgroundColor": "#F0F4F8",

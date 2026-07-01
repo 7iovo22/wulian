@@ -48,6 +48,35 @@ function formatPhone(phone) {
   return `${phone.slice(0, 3)}****${phone.slice(-4)}`;
 }
 
+function formatNumber(value, fallback = '--') {
+  if (value === null || value === undefined || value === '') {
+    return fallback;
+  }
+  const num = parseFloat(value);
+  return isNaN(num) ? fallback : value;
+}
+
+function formatText(value, fieldName = '') {
+  if (value === null || value === undefined || value === '') {
+    return fieldName ? `暂无${fieldName}` : '暂无数据';
+  }
+  return value;
+}
+
+function formatTime(value, fallback = '--') {
+  if (value === null || value === undefined || value === '') {
+    return fallback;
+  }
+  return value;
+}
+
+function formatPhoneWithFallback(phone, fallback = '未绑定联系人') {
+  if (!phone || phone.length !== 11) {
+    return fallback;
+  }
+  return `${phone.slice(0, 3)}****${phone.slice(-4)}`;
+}
+
 function validatePhone(phone) {
   return /^1[3-9]\d{9}$/.test(phone);
 }
@@ -369,6 +398,10 @@ module.exports = {
   formatDistance,
   formatSpeed,
   formatPhone,
+  formatNumber,
+  formatText,
+  formatTime,
+  formatPhoneWithFallback,
   validatePhone,
   validateCode,
   debounce,

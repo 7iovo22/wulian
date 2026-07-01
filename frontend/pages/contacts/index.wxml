@@ -1,3 +1,50 @@
+<wxs module="format">
+var formatNumber = function(value) {
+  if (value === null || value === undefined || value === '') {
+    return '--';
+  }
+  var num = parseFloat(value);
+  return isNaN(num) ? '--' : value;
+};
+
+var formatText = function(value, fieldName) {
+  fieldName = fieldName || '';
+  if (value === null || value === undefined || value === '') {
+    return fieldName ? '暂无' + fieldName : '暂无数据';
+  }
+  return value;
+};
+
+var formatTime = function(value) {
+  if (value === null || value === undefined || value === '') {
+    return '--';
+  }
+  return value;
+};
+
+var formatPhoneWithFallback = function(phone) {
+  if (!phone || phone.length !== 11) {
+    return '未绑定联系人';
+  }
+  return phone.slice(0, 3) + '****' + phone.slice(-4);
+};
+
+var getFirstChar = function(str, fallback) {
+  fallback = fallback || '未';
+  if (!str || str === '' || str === null || str === undefined) {
+    return fallback.charAt(0);
+  }
+  return str.charAt(0);
+};
+
+module.exports = {
+  formatNumber: formatNumber,
+  formatText: formatText,
+  formatTime: formatTime,
+  formatPhoneWithFallback: formatPhoneWithFallback,
+  getFirstChar: getFirstChar
+};
+</wxs>
 <view class="container">
   <view class="contacts-header">
     <view class="back-btn" bindtap="goBack">
@@ -12,14 +59,14 @@
   <view class="contacts-list" wx:if="{{contacts.length > 0}}">
     <view class="contact-item" wx:for="{{contacts}}" wx:key="id">
       <view class="contact-avatar">
-        <text class="avatar-text">{{item.name.charAt(0)}}</text>
+        <text class="avatar-text">{{format.getFirstChar(item.name, '未')}}</text>
       </view>
       <view class="contact-info">
         <view class="contact-name">
-          <text>{{item.name}}</text>
-          <text class="contact-relation">{{item.relation}}</text>
+          <text>{{format.formatText(item.name, '联系人')}}</text>
+          <text class="contact-relation">{{format.formatText(item.relation, '关系')}}</text>
         </view>
-        <view class="contact-phone">{{item.phone}}</view>
+        <view class="contact-phone">{{format.formatPhoneWithFallback(item.phone)}}</view>
       </view>
       <view class="contact-actions">
         <view class="action-btn call" bindtap="callContact" data-phone="{{item.phone}}">

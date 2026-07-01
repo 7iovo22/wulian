@@ -1,0 +1,204 @@
+<wxs module="format">
+var formatNumber = function(value) {
+  if (value === null || value === undefined || value === '') {
+    return '--';
+  }
+  var num = parseFloat(value);
+  return isNaN(num) ? '--' : value;
+};
+
+var formatText = function(value, fieldName) {
+  fieldName = fieldName || '';
+  if (value === null || value === undefined || value === '') {
+    return fieldName ? '暂无' + fieldName : '暂无数据';
+  }
+  return value;
+};
+
+var formatTime = function(value) {
+  if (value === null || value === undefined || value === '') {
+    return '--';
+  }
+  return value;
+};
+
+var getValue = function(obj, path) {
+  if (!obj) return null;
+  var keys = path.split('.');
+  var result = obj;
+  for (var i = 0; i < keys.length; i++) {
+    if (result === null || result === undefined) return null;
+    result = result[keys[i]];
+  }
+  return result;
+};
+
+var getTimelineLength = function(arr) {
+  if (!arr || !arr.length) return 0;
+  return arr.length;
+};
+
+var getTimelineDotColor = function(type) {
+  if (type === 'warning') return '#FFB74D';
+  if (type === 'danger') return '#E57373';
+  return '#4CAF50';
+};
+
+module.exports = {
+  formatNumber: formatNumber,
+  formatText: formatText,
+  formatTime: formatTime,
+  getValue: getValue,
+  getTimelineLength: getTimelineLength,
+  getTimelineDotColor: getTimelineDotColor
+};
+</wxs>
+<view class="container">
+  <view class="detail-header">
+    <view class="back-btn" bindtap="goBack">
+      <text class="back-icon">←</text>
+    </view>
+    <view class="header-title">事件详情</view>
+    <view class="placeholder"></view>
+  </view>
+
+  <view class="detail-content">
+    <view class="event-card">
+      <view class="event-header">
+        <view class="event-icon" style="background: {{getEventColor(eventData.eventType)}};">
+          <text>{{getEventIcon(eventData.eventType)}}</text>
+        </view>
+        <view class="event-info">
+          <view class="type-tag" style="background: {{getEventTypeBg(eventData.eventType)}}; color: {{getEventTypeColor(eventData.eventType)}};">
+            {{getEventTypeText(eventData.eventType)}}
+          </view>
+          <view class="event-title">{{format.formatText(eventData.description, '事件描述')}}</view>
+        </view>
+        <view class="risk-badge" style="background: {{getRiskColor(eventData.riskLevel)}};">
+          {{getRiskText(eventData.riskLevel)}}
+        </view>
+      </view>
+
+      <view class="event-meta">
+        <view class="meta-row">
+          <text class="meta-label">📅 发生时间</text>
+          <text class="meta-value">{{format.formatTime(eventData.createTime)}}</text>
+        </view>
+        <view class="meta-row">
+          <text class="meta-label">📍 地理位置</text>
+          <text class="meta-value">{{format.formatText(eventData.desensitizedLocation, '位置')}}</text>
+        </view>
+        <view class="meta-row">
+          <text class="meta-label">📊 处理状态</text>
+          <view class="status-badge {{eventData.statusClass}}">
+            {{getStatusText(eventData.status)}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-icon">📡</text>
+        <text class="section-title">原始传感证据数据</text>
+      </view>
+      <view class="telemetry-grid">
+        <view class="telemetry-item">
+          <view class="telemetry-icon">📏</view>
+          <view class="telemetry-info">
+            <view class="telemetry-value">{{format.formatText(format.getValue(eventData, 'telemetry.acceleration'), '--')}}</view>
+            <view class="telemetry-label">加速度</view>
+          </view>
+        </view>
+        <view class="telemetry-item">
+          <view class="telemetry-icon">🔄</view>
+          <view class="telemetry-info">
+            <view class="telemetry-value">{{format.formatText(format.getValue(eventData, 'telemetry.rotation'), '--')}}</view>
+            <view class="telemetry-label">角速度</view>
+          </view>
+        </view>
+        <view class="telemetry-item">
+          <view class="telemetry-icon">❤️</view>
+          <view class="telemetry-info">
+            <view class="telemetry-value">{{format.formatNumber(format.getValue(eventData, 'telemetry.heartRate'))}}bpm</view>
+            <view class="telemetry-label">心率</view>
+          </view>
+        </view>
+        <view class="telemetry-item">
+          <view class="telemetry-icon">🌡️</view>
+          <view class="telemetry-info">
+            <view class="telemetry-value">{{format.formatNumber(format.getValue(eventData, 'telemetry.temperature'))}}℃</view>
+            <view class="telemetry-label">体温</view>
+          </view>
+        </view>
+        <view class="telemetry-item">
+          <view class="telemetry-icon">⚡</view>
+          <view class="telemetry-info">
+            <view class="telemetry-value">{{format.formatNumber(format.getValue(eventData, 'telemetry.speed'))}}km/h</view>
+            <view class="telemetry-label">事发速度</view>
+          </view>
+        </view>
+        <view class="telemetry-item">
+          <view class="telemetry-icon">📱</view>
+          <view class="telemetry-info">
+            <view class="telemetry-value">{{format.formatText(format.getValue(eventData, 'telemetry.deviceStatus'), '--')}}</view>
+            <view class="telemetry-label">设备状态</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-icon">🎬</text>
+        <text class="section-title">事件时间线</text>
+      </view>
+      <view class="timeline">
+        <view 
+          class="timeline-item" 
+          wx:for="{{eventData.timeline}}" 
+          wx:key="time"
+        >
+          <view class="timeline-dot" style="background: {{format.getTimelineDotColor(item.type)}};"></view>
+          <view class="timeline-line" wx:if="{{index < format.getTimelineLength(eventData.timeline) - 1}}"></view>
+          <view class="timeline-content">
+            <view class="timeline-time">{{item.time}}</view>
+            <view class="timeline-event">{{item.event}}</view>
+            <view class="timeline-data" wx:if="{{item.data}}">
+              <text class="data-label">数据：</text>
+              <text class="data-value">{{item.data}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-icon">💡</text>
+        <text class="section-title">处置建议</text>
+      </view>
+      <view class="recommendation-list">
+        <view 
+          class="recommendation-item" 
+          wx:for="{{eventData.recommendations}}" 
+          wx:key="*this"
+        >
+          <view class="rec-icon">✓</view>
+          <view class="rec-text">{{item}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="bottom-actions">
+      <button class="action-btn secondary" bindtap="copyDetail">
+        <text class="btn-icon">📋</text>
+        <text>复制详情</text>
+      </button>
+      <button class="action-btn primary" bindtap="goToReport">
+        <text class="btn-icon">📄</text>
+        <text>生成报告</text>
+      </button>
+    </view>
+  </view>
+</view>

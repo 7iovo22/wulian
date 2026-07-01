@@ -1,3 +1,25 @@
+<wxs module="format">
+var formatNumber = function(value) {
+  if (value === null || value === undefined || value === '') {
+    return '--';
+  }
+  var num = parseFloat(value);
+  return isNaN(num) ? '--' : value;
+};
+
+var formatText = function(value, fieldName) {
+  fieldName = fieldName || '';
+  if (value === null || value === undefined || value === '') {
+    return fieldName ? '暂无' + fieldName : '暂无数据';
+  }
+  return value;
+};
+
+module.exports = {
+  formatNumber: formatNumber,
+  formatText: formatText
+};
+</wxs>
 <view class="container">
   <view class="health-header">
     <view class="back-btn" bindtap="goBack">
@@ -12,24 +34,24 @@
       <view class="health-item heart-rate">
         <view class="item-icon">❤</view>
         <view class="item-content">
-          <view class="item-value">{{currentData.heartRate}}</view>
+          <view class="item-value">{{format.formatNumber(currentData.heartRate)}}</view>
           <view class="item-unit">bpm</view>
         </view>
         <view class="item-label">心率</view>
         <view class="item-status {{getHeartRateStatus(currentData.heartRate)}}">
-          {{getHeartRateStatusText(currentData.heartRate)}}
+          {{format.formatText(getHeartRateStatusText(currentData.heartRate), '状态')}}
         </view>
       </view>
       
       <view class="health-item temperature">
         <view class="item-icon">🌡</view>
         <view class="item-content">
-          <view class="item-value">{{currentData.temperature}}</view>
+          <view class="item-value">{{format.formatNumber(currentData.temperature)}}</view>
           <view class="item-unit">°C</view>
         </view>
         <view class="item-label">体温</view>
         <view class="item-status {{getTemperatureStatus(currentData.temperature)}}">
-          {{getTemperatureStatusText(currentData.temperature)}}
+          {{format.formatText(getTemperatureStatusText(currentData.temperature), '状态')}}
         </view>
       </view>
     </view>
@@ -112,14 +134,14 @@
     </view>
     
     <view class="history-list">
-      <view class="history-item" wx:for="{{historyList}}" wx:key="id">
-        <view class="history-time">{{item.time}}</view>
+      <view class="history-item" wx:for="{{historyList || []}}" wx:key="id">
+        <view class="history-time">{{format.formatTime(item.time)}}</view>
         <view class="history-data">
-          <text class="history-heart">心率: {{item.heartRate}}bpm</text>
-          <text class="history-temp">体温: {{item.temperature}}°C</text>
+          <text class="history-heart">心率: {{format.formatNumber(item.heartRate)}}bpm</text>
+          <text class="history-temp">体温: {{format.formatNumber(item.temperature)}}°C</text>
         </view>
         <view class="history-status" style="color: {{item.status === 'normal' ? '#32CD32' : '#FF8C00'}}">
-          {{item.status === 'normal' ? '正常' : '异常'}}
+          {{item.status === 'normal' ? '正常' : (item.status === 'warning' ? '异常' : format.formatText('', '状态'))}}
         </view>
       </view>
     </view>

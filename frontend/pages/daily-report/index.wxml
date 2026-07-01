@@ -1,4 +1,34 @@
 <wxs src="./utils.wxs" module="utils" />
+<wxs module="format">
+var formatNumber = function(value) {
+  if (value === null || value === undefined || value === '') {
+    return '--';
+  }
+  var num = parseFloat(value);
+  return isNaN(num) ? '--' : value;
+};
+
+var formatText = function(value, fieldName) {
+  fieldName = fieldName || '';
+  if (value === null || value === undefined || value === '') {
+    return fieldName ? '暂无' + fieldName : '暂无数据';
+  }
+  return value;
+};
+
+var formatTime = function(value) {
+  if (value === null || value === undefined || value === '') {
+    return '--';
+  }
+  return value;
+};
+
+module.exports = {
+  formatNumber: formatNumber,
+  formatText: formatText,
+  formatTime: formatTime
+};
+</wxs>
 <view class="container">
   <view class="date-selector">
     <scroll-view scroll-x class="date-scroll">
@@ -76,22 +106,22 @@
       <view class="stats-grid card">
         <view class="stat-item">
           <view class="stat-icon">🚴</view>
-          <view class="stat-value">{{statsData.totalRides}}</view>
+          <view class="stat-value">{{format.formatNumber(statsData.totalRides)}}</view>
           <view class="stat-label">骑行次数</view>
         </view>
         <view class="stat-item">
           <view class="stat-icon">📍</view>
-          <view class="stat-value">{{statsData.totalDistance}}</view>
+          <view class="stat-value">{{format.formatNumber(statsData.totalDistance)}}</view>
           <view class="stat-label">总里程(km)</view>
         </view>
         <view class="stat-item">
           <view class="stat-icon">⏱️</view>
-          <view class="stat-value">{{statsData.totalDuration}}</view>
+          <view class="stat-value">{{format.formatNumber(statsData.totalDuration)}}</view>
           <view class="stat-label">时长(分钟)</view>
         </view>
         <view class="stat-item">
           <view class="stat-icon">⚡</view>
-          <view class="stat-value">{{statsData.avgSpeed}}</view>
+          <view class="stat-value">{{format.formatNumber(statsData.avgSpeed)}}</view>
           <view class="stat-label">均速(km/h)</view>
         </view>
       </view>
@@ -217,7 +247,7 @@
           <view class="health-item">
             <view class="health-icon heart">❤️</view>
             <view class="health-info">
-              <view class="health-value">{{healthData.avgHeartRate}}</view>
+              <view class="health-value">{{format.formatNumber(healthData.avgHeartRate)}}</view>
               <view class="health-label">平均心率</view>
               <view class="health-unit">bpm</view>
             </view>
@@ -225,7 +255,7 @@
           <view class="health-item">
             <view class="health-icon temp">🌡️</view>
             <view class="health-info">
-              <view class="health-value">{{healthData.avgTemperature}}</view>
+              <view class="health-value">{{format.formatNumber(healthData.avgTemperature)}}</view>
               <view class="health-label">平均体温</view>
               <view class="health-unit">℃</view>
             </view>
@@ -234,7 +264,7 @@
             <view class="health-icon fatigue">😴</view>
             <view class="health-info">
               <view class="health-value" style="color: {{utils.getFatigueLevelColor(healthData.fatigueLevel)}};">
-                {{utils.getFatigueLevelText(healthData.fatigueLevel)}}
+                {{format.formatText(utils.getFatigueLevelText(healthData.fatigueLevel), '疲劳等级')}}
               </view>
               <view class="health-label">疲劳等级</view>
               <view class="health-unit"></view>
@@ -243,7 +273,7 @@
           <view class="health-item">
             <view class="health-icon max">📈</view>
             <view class="health-info">
-              <view class="health-value">{{healthData.maxHeartRate}}</view>
+              <view class="health-value">{{format.formatNumber(healthData.maxHeartRate)}}</view>
               <view class="health-label">最高心率</view>
               <view class="health-unit">bpm</view>
             </view>
@@ -262,29 +292,29 @@
         <view class="device-info">
           <view class="device-row">
             <text class="device-label">在线时长</text>
-            <text class="device-value">{{deviceStatus.onlineTime}}分钟</text>
+            <text class="device-value">{{format.formatNumber(deviceStatus.onlineTime)}}分钟</text>
           </view>
           <view class="device-row">
             <text class="device-label">离线时长</text>
-            <text class="device-value">{{deviceStatus.offlineTime}}分钟</text>
+            <text class="device-value">{{format.formatNumber(deviceStatus.offlineTime)}}分钟</text>
           </view>
           <view class="device-row">
             <text class="device-label">剩余电量</text>
             <view class="battery-info">
               <view class="battery-bar">
-                <view class="battery-fill" style="width: {{deviceStatus.batteryLevel}}%;"></view>
+                <view class="battery-fill" style="width: {{deviceStatus.batteryLevel || 0}}%;"></view>
               </view>
-              <text class="battery-text">{{deviceStatus.batteryLevel}}%</text>
+              <text class="battery-text">{{format.formatNumber(deviceStatus.batteryLevel)}}%</text>
             </view>
           </view>
           <view class="device-row">
             <text class="device-label">固件版本</text>
-            <text class="device-value">{{deviceStatus.firmwareVersion}}</text>
+            <text class="device-value">{{format.formatText(deviceStatus.firmwareVersion, '固件版本')}}</text>
           </view>
           <view class="device-row">
             <text class="device-label">传感器状态</text>
             <text class="device-value status-{{deviceStatus.sensorStatus}}">
-              {{deviceStatus.sensorStatus === 'normal' ? '正常' : '异常'}}
+              {{deviceStatus.sensorStatus === 'normal' ? '正常' : (deviceStatus.sensorStatus === 'abnormal' ? '异常' : format.formatText('', '传感器状态'))}}
             </text>
           </view>
         </view>

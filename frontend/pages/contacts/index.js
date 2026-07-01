@@ -1,4 +1,5 @@
 const api = require('../../utils/api');
+const { formatText, formatPhoneWithFallback } = require('../../utils/helpers');
 
 Page({
   data: {

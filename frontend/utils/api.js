@@ -53,7 +53,11 @@ module.exports = {
     getDaily: () => get('/api/report/daily'),
     getWeekly: () => get('/api/report/weekly'),
     getMonthly: () => get('/api/report/monthly'),
-    getTrend: () => get('/api/report/trend')
+    getTrend: () => get('/api/report/trend'),
+    getDailyReport: (date) => get(`/api/report/daily/${date}`),
+    generateDailyReport: (date) => post('/api/report/daily/generate', { date }),
+    getEventReport: (eventId) => get(`/api/report/event/${eventId}`),
+    generateEventReport: (eventId) => post('/api/report/event/generate', { eventId })
   },
 
   fatigue: {

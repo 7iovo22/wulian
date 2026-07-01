@@ -1,3 +1,45 @@
+<wxs module="format">
+var getValue = function(obj, path) {
+  if (!obj) return null;
+  var keys = path.split('.');
+  var result = obj;
+  for (var i = 0; i < keys.length; i++) {
+    if (result === null || result === undefined) return null;
+    result = result[keys[i]];
+  }
+  return result;
+};
+
+var formatNumber = function(value) {
+  if (value === null || value === undefined || value === '') {
+    return '--';
+  }
+  var num = parseFloat(value);
+  return isNaN(num) ? '--' : value;
+};
+
+var formatText = function(value, fieldName) {
+  fieldName = fieldName || '';
+  if (value === null || value === undefined || value === '') {
+    return fieldName ? '暂无' + fieldName : '暂无数据';
+  }
+  return value;
+};
+
+var formatTime = function(value) {
+  if (value === null || value === undefined || value === '') {
+    return '--';
+  }
+  return value;
+};
+
+module.exports = {
+  getValue: getValue,
+  formatNumber: formatNumber,
+  formatText: formatText,
+  formatTime: formatTime
+};
+</wxs>
 <view class="container">
   <view class="loading-overlay" wx:if="{{isLoading}}">
     <view class="loading-box">
@@ -9,12 +51,12 @@
   <block wx:if="{{!isLoading && reportData}}">
     <view class="report-header">
       <view class="report-badge {{reportData.riskLevel}}">
-        {{reportData.riskLevel === 'high' ? '高危' : reportData.riskLevel === 'medium' ? '中危' : '低危'}}
+        {{reportData.riskLevel === 'high' ? '高危' : reportData.riskLevel === 'medium' ? '中危' : format.formatText('低危', '风险等级')}}
       </view>
-      <view class="report-title">{{reportData.title}}</view>
+      <view class="report-title">{{format.formatText(reportData.title, '报告标题')}}</view>
       <view class="report-meta">
-        <text class="meta-item">🕐 {{reportData.eventTime}}</text>
-        <text class="meta-item">📍 {{reportData.location}}</text>
+        <text class="meta-item">🕐 {{format.formatTime(reportData.eventTime)}}</text>
+        <text class="meta-item">📍 {{format.formatText(reportData.location, '位置')}}</text>
       </view>
     </view>
 
@@ -50,21 +92,21 @@
       </view>
       <view class="risk-analysis">
         <view class="risk-score-card">
-          <view class="score-circle" style="background: conic-gradient({{riskColor}} 0deg, {{riskColor}} {{reportData.riskScore * 3.6}}deg, #E1E5E9 {{reportData.riskScore * 3.6}}deg, #E1E5E9 360deg);">
+          <view class="score-circle" style="background: conic-gradient({{riskColor}} 0deg, {{riskColor}} {{(reportData.riskScore || 0) * 3.6}}deg, #E1E5E9 {{(reportData.riskScore || 0) * 3.6}}deg, #E1E5E9 360deg);">
             <view class="score-inner">
-              <view class="score-value">{{reportData.riskScore}}</view>
+              <view class="score-value">{{format.formatNumber(reportData.riskScore)}}</view>
               <view class="score-label">风险评分</view>
             </view>
           </view>
         </view>
         <view class="risk-factors">
-          <view class="risk-factor" wx:for="{{reportData.riskFactors}}" wx:key="name">
+          <view class="risk-factor" wx:for="{{reportData.riskFactors || []}}" wx:key="name">
             <view class="factor-bar">
-              <view class="factor-fill" style="width: {{item.score}}%; background: {{item.score >= 80 ? '#E57373' : item.score >= 50 ? '#FFB74D' : '#4CAF50'}};"></view>
+              <view class="factor-fill" style="width: {{item.score || 0}}%; background: {{(item.score || 0) >= 80 ? '#E57373' : (item.score || 0) >= 50 ? '#FFB74D' : '#4CAF50'}};"></view>
             </view>
             <view class="factor-info">
-              <text class="factor-name">{{item.name}}</text>
-              <text class="factor-score">{{item.score}}%</text>
+              <text class="factor-name">{{format.formatText(item.name, '风险因素')}}</text>
+              <text class="factor-score">{{format.formatNumber(item.score)}}%</text>
             </view>
           </view>
         </view>
@@ -81,14 +123,14 @@
           <view class="data-item">
             <view class="data-icon">📏</view>
             <view class="data-info">
-              <view class="data-value">{{reportData.telemetry.maxAcceleration}}g</view>
+              <view class="data-value">{{format.formatNumber(format.getValue(reportData, 'telemetry.maxAcceleration'))}}g</view>
               <view class="data-label">最大加速度</view>
             </view>
           </view>
           <view class="data-item">
             <view class="data-icon">🔄</view>
             <view class="data-info">
-              <view class="data-value">{{reportData.telemetry.maxRotation}}°/s</view>
+              <view class="data-value">{{format.formatNumber(format.getValue(reportData, 'telemetry.maxRotation'))}}°/s</view>
               <view class="data-label">最大角速度</view>
             </view>
           </view>
@@ -97,14 +139,14 @@
           <view class="data-item">
             <view class="data-icon">❤️</view>
             <view class="data-info">
-              <view class="data-value">{{reportData.telemetry.heartRate}}bpm</view>
+              <view class="data-value">{{format.formatNumber(format.getValue(reportData, 'telemetry.heartRate'))}}bpm</view>
               <view class="data-label">事发时心率</view>
             </view>
           </view>
           <view class="data-item">
             <view class="data-icon">🌡️</view>
             <view class="data-info">
-              <view class="data-value">{{reportData.telemetry.temperature}}℃</view>
+              <view class="data-value">{{format.formatNumber(format.getValue(reportData, 'telemetry.temperature'))}}℃</view>
               <view class="data-label">事发时体温</view>
             </view>
           </view>
@@ -113,14 +155,14 @@
           <view class="data-item">
             <view class="data-icon">⚡</view>
             <view class="data-info">
-              <view class="data-value">{{reportData.telemetry.speed}}km/h</view>
+              <view class="data-value">{{format.formatNumber(format.getValue(reportData, 'telemetry.speed'))}}km/h</view>
               <view class="data-label">事发时速度</view>
             </view>
           </view>
           <view class="data-item">
             <view class="data-icon">📱</view>
             <view class="data-info">
-              <view class="data-value">{{reportData.telemetry.deviceStatus}}</view>
+              <view class="data-value">{{format.formatText(format.getValue(reportData, 'telemetry.deviceStatus'), '设备状态')}}</view>
               <view class="data-label">设备状态</view>
             </view>
           </view>

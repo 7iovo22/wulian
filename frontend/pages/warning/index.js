@@ -1,4 +1,5 @@
 const helpers = require('../../utils/helpers');
+const { formatNumber, formatText, formatTime } = require('../../utils/helpers');
 
 Page({
   data: {

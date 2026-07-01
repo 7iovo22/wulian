@@ -1,0 +1,171 @@
+<wxs module="format">
+var formatNumber = function(value) {
+  if (value === null || value === undefined || value === '') {
+    return '--';
+  }
+  var num = parseFloat(value);
+  return isNaN(num) ? '--' : value;
+};
+
+var formatText = function(value, fieldName) {
+  fieldName = fieldName || '';
+  if (value === null || value === undefined || value === '') {
+    return fieldName ? '暂无' + fieldName : '暂无数据';
+  }
+  return value;
+};
+
+var formatTime = function(value) {
+  if (value === null || value === undefined || value === '') {
+    return '--';
+  }
+  return value;
+};
+
+module.exports = {
+  formatNumber: formatNumber,
+  formatText: formatText,
+  formatTime: formatTime
+};
+</wxs>
+<view class="container">
+  <view class="detail-header">
+    <view class="back-btn" bindtap="goBack">
+      <text class="back-icon">←</text>
+    </view>
+    <view class="header-title">AI分析</view>
+    <view class="placeholder"></view>
+  </view>
+
+  <view class="detail-content">
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-icon">🤖</text>
+        <text class="section-title">事件风险摘要</text>
+        <view class="ai-badge {{isAiMode ? 'active' : 'mock'}}">
+          {{isAiMode ? 'AI生成' : '模板占位'}}
+        </view>
+      </view>
+      <view class="analysis-content">
+        {{format.formatText(analysisData.riskSummary, '风险摘要')}}
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-icon">💡</text>
+        <text class="section-title">系统建议处置动作</text>
+      </view>
+      <view class="action-list">
+        <view 
+          class="action-item" 
+          wx:for="{{analysisData.disposalActions || []}}" 
+          wx:key="*this"
+        >
+          <view class="action-num">{{index + 1}}</view>
+          <view class="action-content">
+            <view class="action-title">{{item.title}}</view>
+            <view class="action-desc">{{item.description}}</view>
+          </view>
+          <view class="action-status {{item.status === 'completed' ? 'completed' : 'pending'}}">
+            {{item.status === 'completed' ? '✓' : '○'}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-icon">📝</text>
+        <text class="section-title">事故复盘草稿</text>
+        <view class="save-btn" bindtap="saveDraft">
+          <text>保存</text>
+        </view>
+      </view>
+      <textarea 
+        class="draft-textarea" 
+        placeholder="请输入事故复盘内容..." 
+        value="{{analysisData.reviewDraft}}"
+        bindinput="onDraftInput"
+        maxlength="-1"
+      ></textarea>
+      <view class="draft-footer">
+        <text class="draft-count">{{analysisData.reviewDraft.length}}字</text>
+      </view>
+    </view>
+
+    <view class="section-card">
+      <view class="section-header">
+        <text class="section-icon">📊</text>
+        <text class="section-title">骑手每日安全日报</text>
+        <text class="report-date">{{format.formatText(analysisData.reportDate, '日期')}}</text>
+      </view>
+      
+      <view class="daily-report">
+        <view class="report-summary">
+          <view class="summary-card">
+            <view class="summary-value">{{format.formatNumber(analysisData.ridingHours)}}</view>
+            <view class="summary-label">今日骑行时长</view>
+            <view class="summary-unit">小时</view>
+          </view>
+          <view class="summary-card">
+            <view class="summary-value">{{format.formatNumber(analysisData.ridingDistance)}}</view>
+            <view class="summary-label">今日骑行里程</view>
+            <view class="summary-unit">km</view>
+          </view>
+          <view class="summary-card">
+            <view class="summary-value warning">{{format.formatNumber(analysisData.alarmCount)}}</view>
+            <view class="summary-label">今日预警次数</view>
+            <view class="summary-unit">次</view>
+          </view>
+          <view class="summary-card">
+            <view class="summary-value success">{{format.formatNumber(analysisData.safetyScore)}}</view>
+            <view class="summary-label">安全评分</view>
+            <view class="summary-unit">分</view>
+          </view>
+        </view>
+
+        <view class="report-section">
+          <view class="report-section-title">📈 健康状况</view>
+          <view class="health-stats">
+            <view class="health-item">
+              <text class="health-label">平均心率</text>
+              <text class="health-value">{{format.formatNumber(analysisData.avgHeartRate)}}bpm</text>
+            </view>
+            <view class="health-item">
+              <text class="health-label">最高心率</text>
+              <text class="health-value">{{format.formatNumber(analysisData.maxHeartRate)}}bpm</text>
+            </view>
+            <view class="health-item">
+              <text class="health-label">平均体温</text>
+              <text class="health-value">{{format.formatNumber(analysisData.avgTemperature)}}℃</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="report-section">
+          <view class="report-section-title">🚨 安全事件统计</view>
+          <view class="event-stats">
+            <view class="event-stat" wx:for="{{analysisData.eventStats || []}}" wx:key="type">
+              <view class="event-icon">{{item.icon}}</view>
+              <view class="event-info">
+                <view class="event-name">{{item.name}}</view>
+                <view class="event-count">今日 {{item.count}} 次</view>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view class="report-section">
+          <view class="report-section-title">🎯 安全建议</view>
+          <view class="suggestion-list">
+            <view class="suggestion-item" wx:for="{{analysisData.safetySuggestions || []}}" wx:key="*this">
+              <view class="suggestion-dot"></view>
+              <view class="suggestion-text">{{item}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

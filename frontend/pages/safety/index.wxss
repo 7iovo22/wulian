@@ -21,7 +21,6 @@
   overflow: hidden;
 }
 
-/* 卡通装饰元素 */
 .sos-card::before {
   content: '';
   position: absolute;
@@ -178,6 +177,13 @@
   box-shadow: var(--shadow-medium);
 }
 
+.warning-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10rpx;
+}
+
 .warning-icon {
   width: 70rpx;
   height: 70rpx;
@@ -189,50 +195,96 @@
   flex-shrink: 0;
 }
 
+.risk-badge {
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  font-size: 20rpx;
+  font-weight: bold;
+  color: #fff;
+  flex-shrink: 0;
+}
+
 .warning-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 10rpx;
+  min-width: 0;
 }
 
 .warning-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 8rpx;
 }
 
-.warning-type {
-  font-size: 28rpx;
+.type-tag {
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
   font-weight: bold;
-  color: var(--color-text-primary);
 }
 
 .warning-time {
   font-size: 22rpx;
   color: var(--color-text-secondary);
+  flex-shrink: 0;
 }
 
 .warning-desc {
   font-size: 26rpx;
   color: var(--color-text-secondary);
   line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .warning-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 8rpx;
 }
 
 .warning-location {
   font-size: 22rpx;
   color: var(--color-text-disabled);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.warning-status {
-  font-size: 24rpx;
+.status-badge {
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
   font-weight: bold;
+  flex-shrink: 0;
+}
+
+.status-badge.open {
+  background: rgba(255, 140, 0, 0.1);
+  color: #FF8C00;
+}
+
+.status-badge.acked {
+  background: rgba(30, 144, 255, 0.1);
+  color: #1E90FF;
+}
+
+.status-badge.resolved {
+  background: rgba(50, 205, 50, 0.1);
+  color: #32CD32;
+}
+
+.status-badge.cancelled {
+  background: rgba(120, 144, 156, 0.1);
+  color: #78909C;
 }
 
 .empty-state {
@@ -312,16 +364,16 @@
   background: linear-gradient(135deg, var(--color-cute-pink) 0%, var(--color-danger-light) 100%);
 }
 
-.quick-icon.fatigue {
+.quick-icon.ai {
   background: linear-gradient(135deg, var(--color-cute-purple) 0%, #CE93D8 100%);
 }
 
-.quick-icon.evidence {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+.quick-icon.reminder {
+  background: linear-gradient(135deg, #FFD54F 0%, #FFB74D 100%);
 }
 
-.quick-icon.mutual {
-  background: linear-gradient(135deg, var(--color-cute-green) 0%, var(--color-success-light) 100%);
+.quick-icon.report {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
 }
 
 .quick-text {

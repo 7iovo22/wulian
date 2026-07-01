@@ -1,3 +1,41 @@
+<wxs module="format">
+var formatNumber = function(value) {
+  if (value === null || value === undefined || value === '') {
+    return '--';
+  }
+  var num = parseFloat(value);
+  return isNaN(num) ? '--' : value;
+};
+
+var formatText = function(value, fieldName) {
+  fieldName = fieldName || '';
+  if (value === null || value === undefined || value === '') {
+    return fieldName ? '暂无' + fieldName : '暂无数据';
+  }
+  return value;
+};
+
+var formatTime = function(value) {
+  if (value === null || value === undefined || value === '') {
+    return '--';
+  }
+  return value;
+};
+
+var getStatusClass = function(status) {
+  if (status === 'normal') return 'status-normal';
+  if (status === 'warning') return 'status-warning';
+  return 'status-danger';
+};
+
+module.exports = {
+  formatNumber: formatNumber,
+  formatText: formatText,
+  formatTime: formatTime,
+  getStatusClass: getStatusClass
+};
+</wxs>
+
 <view class="container">
   <view class="device-header">
     <view class="header-bg"></view>
@@ -14,31 +52,232 @@
     </view>
   </view>
 
-  <view class="device-info-card">
-    <view class="info-item">
-      <text class="info-label">设备编号</text>
-      <text class="info-value">{{deviceInfo.deviceSn || '未绑定'}}</text>
+  <view class="network-card">
+    <view class="network-header">
+      <view class="network-icon">📶</view>
+      <view class="network-info">
+        <text class="network-title">网络状态</text>
+        <text class="network-type">{{format.formatText(networkStatus.networkType, '网络类型')}}</text>
+      </view>
+      <view class="network-status-tag {{networkStatus.isOnline ? 'online' : 'offline'}}">
+        {{networkStatus.isOnline ? '在线' : '离线'}}
+      </view>
     </view>
-    <view class="info-item">
-      <text class="info-label">固件版本</text>
-      <text class="info-value">{{deviceInfo.firmwareVersion || '1.0.0'}}</text>
+    <view class="signal-section">
+      <view class="signal-bars">
+        <view 
+          wx:for="{{[0,1,2,3,4]}}" 
+          wx:key="index" 
+          class="signal-bar {{index < networkStatus.signalLevel ? 'active' : ''}}"
+          style="height: {{(index + 1) * 20}}%;"
+        ></view>
+      </view>
+      <text class="signal-value">{{format.formatNumber(networkStatus.signalStrength)}}%</text>
     </view>
-    <view class="info-item">
-      <text class="info-label">绑定时间</text>
-      <text class="info-value">{{bindTime || '2024-01-15'}}</text>
+    <view class="network-footer">
+      <text class="update-time">更新时间: {{format.formatTime(networkStatus.updateTime)}}</text>
     </view>
   </view>
 
-  <view class="battery-card">
-    <view class="battery-header">
-      <text class="battery-title">电池状态</text>
-      <text class="battery-percent">{{deviceInfo.battery || 0}}%</text>
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">设备自检</text>
+      <text class="section-subtitle">{{selfCheckList.length}}项传感器</text>
     </view>
-    <view class="battery-bar-large">
-      <view class="battery-fill-large" style="width: {{deviceInfo.battery || 0}}%; background: {{getBatteryColor(deviceInfo.battery || 0)}};"></view>
+    <view class="self-check-list">
+      <view 
+        wx:for="{{selfCheckList}}" 
+        wx:key="key" 
+        class="self-check-item"
+      >
+        <view class="check-icon-wrap {{item.status === 'normal' ? 'normal' : 'abnormal'}}">
+          <text class="check-icon">{{item.status === 'normal' ? '✓' : '✗'}}</text>
+        </view>
+        <view class="check-info">
+          <text class="check-name">{{item.name}}</text>
+          <text class="check-time">最后自检: {{format.formatTime(item.lastCheckTime)}}</text>
+        </view>
+        <view class="check-status {{item.status === 'normal' ? 'normal' : 'abnormal'}}">
+          {{item.statusText}}
+        </view>
+      </view>
     </view>
-    <view class="battery-info">
-      <text class="battery-text">{{getBatteryStatus(deviceInfo.battery || 0)}}</text>
+  </view>
+
+  <view class="info-card">
+    <view class="info-header">
+      <text class="info-title">设备信息</text>
+    </view>
+    <view class="info-grid">
+      <view class="info-item">
+        <text class="info-label">骑手昵称</text>
+        <text class="info-value">{{format.formatText(riderInfo.nickname, '骑手昵称')}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">设备SN</text>
+        <text class="info-value sn">{{format.formatText(deviceInfo.deviceSn, '设备SN')}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">固件版本</text>
+        <text class="info-value">{{format.formatText(deviceInfo.firmwareVersion, '固件版本')}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">绑定时间</text>
+        <text class="info-value">{{format.formatTime(bindTime)}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="telemetry-panel" bindtap="toggleTelemetryPanel">
+    <view class="panel-header">
+      <view class="panel-icon">📊</view>
+      <text class="panel-title">实时遥测数据</text>
+      <view class="panel-arrow {{telemetryPanelExpanded ? 'expanded' : ''}}">▼</view>
+    </view>
+    
+    <view class="panel-content {{telemetryPanelExpanded ? 'expanded' : ''}}">
+      <view class="telemetry-section">
+        <view class="section-title-sm">姿态与加速度</view>
+        <view class="posture-card">
+          <view class="posture-main">
+            <text class="posture-value">{{format.formatText(telemetryData.posture, '姿态')}}</text>
+            <text class="posture-angle">角度: {{format.formatNumber(telemetryData.postureAngle)}}°</text>
+          </view>
+          <view class="acceleration-info">
+            <view class="acc-item">
+              <text class="acc-label">X</text>
+              <text class="acc-value">{{format.formatNumber(telemetryData.acceleration.x)}}</text>
+            </view>
+            <view class="acc-item">
+              <text class="acc-label">Y</text>
+              <text class="acc-value">{{format.formatNumber(telemetryData.acceleration.y)}}</text>
+            </view>
+            <view class="acc-item">
+              <text class="acc-label">Z</text>
+              <text class="acc-value">{{format.formatNumber(telemetryData.acceleration.z)}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="speed-card">
+        <view class="speed-icon">⚡</view>
+        <view class="speed-info">
+          <text class="speed-value">{{format.formatNumber(telemetryData.speed)}}</text>
+          <text class="speed-unit">km/h</text>
+        </view>
+        <view class="speed-status-tag">{{telemetryData.speedStatus}}</view>
+      </view>
+
+      <view class="telemetry-section">
+        <view class="section-title-sm">定位信息</view>
+        <view class="location-card">
+          <view class="map-placeholder">
+            <view class="map-marker">📍</view>
+            <text class="map-text">实时定位</text>
+          </view>
+          <view class="location-details">
+            <view class="location-row">
+              <text class="location-label">经度</text>
+              <text class="location-value">{{format.formatNumber(locationData.longitude)}}</text>
+            </view>
+            <view class="location-row">
+              <text class="location-label">纬度</text>
+              <text class="location-value">{{format.formatNumber(locationData.latitude)}}</text>
+            </view>
+            <view class="location-row">
+              <text class="location-label">精度</text>
+              <text class="location-value">{{format.formatNumber(locationData.accuracy)}}m</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="telemetry-section">
+        <view class="section-title-sm">生理指标</view>
+        <view class="vital-signs-grid">
+          <view class="vital-card">
+            <view class="vital-icon heart">❤</view>
+            <view class="vital-data">
+              <text class="vital-value">{{format.formatNumber(vitalSigns.heartRate)}}</text>
+              <text class="vital-unit">次/分</text>
+            </view>
+            <text class="vital-label">心率</text>
+            <view class="vital-status {{vitalSigns.heartRateStatus}}">
+              {{vitalSigns.heartRateText}}
+            </view>
+          </view>
+          <view class="vital-card">
+            <view class="vital-icon oxygen">💨</view>
+            <view class="vital-data">
+              <text class="vital-value">{{format.formatNumber(vitalSigns.bloodOxygen)}}</text>
+              <text class="vital-unit">%</text>
+            </view>
+            <text class="vital-label">血氧</text>
+            <view class="vital-status {{vitalSigns.bloodOxygenStatus}}">
+              {{vitalSigns.bloodOxygenText}}
+            </view>
+          </view>
+          <view class="vital-card">
+            <view class="vital-icon temp">🌡</view>
+            <view class="vital-data">
+              <text class="vital-value">{{format.formatNumber(vitalSigns.bodyTemp)}}</text>
+              <text class="vital-unit">℃</text>
+            </view>
+            <text class="vital-label">体温</text>
+            <view class="vital-status {{vitalSigns.bodyTempStatus}}">
+              {{vitalSigns.bodyTempText}}
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="helmet-status-card">
+        <view class="helmet-icon-wrap {{helmetStatus.isWorn ? 'worn' : 'not-worn'}}">
+          <text class="helmet-icon">{{helmetStatus.isWorn ? '🛡️' : '👤'}}</text>
+        </view>
+        <view class="helmet-info">
+          <text class="helmet-status-text">{{helmetStatus.statusText}}</text>
+          <text class="helmet-wear-time">{{helmetStatus.isWorn ? '佩戴时间: ' + helmetStatus.wearTime : ''}}</text>
+        </view>
+        <view class="helmet-battery">
+          <view class="battery-bar">
+            <view 
+              class="battery-fill" 
+              style="width: {{helmetStatus.batteryLevel}}%;"
+            ></view>
+          </view>
+          <text class="battery-text">{{helmetStatus.batteryLevel}}%</text>
+        </view>
+      </view>
+
+      <view class="telemetry-section">
+        <view class="section-title-sm">环境监测</view>
+        <view class="environment-grid">
+          <view class="env-card">
+            <view class="env-icon">🌡</view>
+            <view class="env-data">
+              <text class="env-value">{{format.formatNumber(environmentData.temperature)}}</text>
+              <text class="env-unit">℃</text>
+            </view>
+            <text class="env-label">环境温度</text>
+            <view class="env-status {{environmentData.temperatureStatus === '高温预警' ? 'danger' : ''}}">
+              {{environmentData.temperatureStatus}}
+            </view>
+          </view>
+          <view class="env-card">
+            <view class="env-icon">💧</view>
+            <view class="env-data">
+              <text class="env-value">{{format.formatNumber(environmentData.humidity)}}</text>
+              <text class="env-unit">%</text>
+            </view>
+            <text class="env-label">相对湿度</text>
+            <view class="env-status {{environmentData.rainStatus.includes('雨') ? 'warning' : ''}}">
+              {{environmentData.rainStatus}}
+            </view>
+          </view>
+        </view>
+      </view>
     </view>
   </view>
 
@@ -104,43 +343,6 @@
           block-size="24"
         />
         <text class="volume-value">{{volume}}%</text>
-      </view>
-    </view>
-  </view>
-
-  <view class="data-section">
-    <view class="section-title">实时数据</view>
-    <view class="data-grid">
-      <view class="data-card">
-        <view class="data-icon heart">❤</view>
-        <view class="data-value-wrap">
-          <text class="data-value">{{realtimeData.heartRate}}</text>
-          <text class="data-unit">bpm</text>
-        </view>
-        <text class="data-label">心率</text>
-      </view>
-      <view class="data-card">
-        <view class="data-icon temp">🌡</view>
-        <view class="data-value-wrap">
-          <text class="data-value">{{realtimeData.temperature}}</text>
-          <text class="data-unit">°C</text>
-        </view>
-        <text class="data-label">体温</text>
-      </view>
-      <view class="data-card">
-        <view class="data-icon speed">⚡</view>
-        <view class="data-value-wrap">
-          <text class="data-value">{{realtimeData.speed}}</text>
-          <text class="data-unit">km/h</text>
-        </view>
-        <text class="data-label">速度</text>
-      </view>
-      <view class="data-card">
-        <view class="data-icon posture">🧍</view>
-        <view class="data-value-wrap">
-          <text class="data-value">{{getPostureLabel(realtimeData.posture)}}</text>
-        </view>
-        <text class="data-label">姿态</text>
       </view>
     </view>
   </view>

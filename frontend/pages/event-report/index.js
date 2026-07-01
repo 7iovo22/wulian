@@ -1,5 +1,6 @@
 const api = require('../../utils/api');
 const storage = require('../../utils/storage');
+const { formatNumber, formatText, formatTime } = require('../../utils/helpers');
 
 Page({
   data: {
@@ -29,20 +30,20 @@ Page({
       if (isRefresh) {
         wx.stopPullDownRefresh();
       }
-      
+
       this.setData({
         reportData: res,
         isAiMode: !!res.aiAnalysis,
         isLoading: false,
         riskColor: this.getRiskColor(res.riskLevel)
       });
-      
+
       this.cacheReport(res);
     }).catch(() => {
       if (isRefresh) {
         wx.stopPullDownRefresh();
       }
-      
+
       const cachedReport = this.getCachedReport();
       if (cachedReport) {
         this.setData({
@@ -127,7 +128,7 @@ Page({
       isAiMode: false,
       isLoading: false
     });
-    
+
     this.cacheReport(mockReport);
   },
 
@@ -196,7 +197,7 @@ Page({
     text += `风险评分：${report.riskScore}分\n`;
     text += `事件时间：${report.eventTime}\n`;
     text += `事件地点：${report.location}\n\n`;
-    
+
     text += `【事件过程】\n`;
     report.timeline.forEach((item) => {
       text += `${item.time} - ${item.event}\n`;
@@ -206,11 +207,11 @@ Page({
     text += `最大角速度：${report.telemetry.maxRotation}°/s\n`;
     text += `事发时心率：${report.telemetry.heartRate}bpm\n`;
     text += `事发时速度：${report.telemetry.speed}km/h\n\n`;
-    
+
     if (report.aiAnalysis) {
       text += `【AI分析】\n${report.aiAnalysis}\n\n`;
     }
-    
+
     text += `【安全建议】\n`;
     report.recommendations.forEach((item, index) => {
       text += `${index + 1}. ${item}\n`;

@@ -1,4 +1,6 @@
 const api = require('../../utils/api');
+const { formatNumber, formatText, formatTime } = require('../../utils/helpers');
+const simulator = require('./simulator');
 
 Page({
   data: {
@@ -13,6 +15,74 @@ Page({
       temperature: 36.5,
       speed: 25.5,
       posture: 'normal'
+    },
+
+    networkStatus: {
+      signalStrength: 85,
+      signalLevel: 4,
+      isOnline: true,
+      networkType: '4G',
+      updateTime: '--'
+    },
+
+    selfCheckList: [],
+
+    riderInfo: {
+      nickname: '',
+      phone: ''
+    },
+
+    telemetryPanelExpanded: false,
+
+    telemetryData: {
+      posture: '直立',
+      postureAngle: 0,
+      acceleration: {
+        x: '0.00',
+        y: '0.00',
+        z: '9.81',
+        magnitude: '9.81'
+      },
+      speed: '0.0',
+      speedStatus: '静止'
+    },
+
+    locationData: {
+      latitude: '30.572800',
+      longitude: '104.066800',
+      accuracy: '10.0',
+      altitude: '450.0',
+      speed: '0.0',
+      updateTime: '--'
+    },
+
+    vitalSigns: {
+      heartRate: 75,
+      heartRateStatus: 'normal',
+      heartRateText: '正常',
+      bloodOxygen: 98,
+      bloodOxygenStatus: 'normal',
+      bloodOxygenText: '正常',
+      bodyTemp: '36.5',
+      bodyTempStatus: 'normal',
+      bodyTempText: '正常'
+    },
+
+    helmetStatus: {
+      isWorn: true,
+      statusText: '已佩戴',
+      wearTime: '--',
+      batteryLevel: 85,
+      batteryStatus: '充足'
+    },
+
+    environmentData: {
+      temperature: '25.0',
+      humidity: 60,
+      rainStatus: '无雨',
+      temperatureStatus: '正常',
+      pressure: '1013',
+      updateTime: '--'
     }
   },
 
@@ -22,6 +92,7 @@ Page({
   onLoad: function (options) {
     this.isPageActive = true;
     this.loadDeviceInfo();
+    this.loadInitialData();
   },
 
   onShow: function () {
@@ -39,6 +110,13 @@ Page({
     this.clearTimer();
   },
 
+  onPullDownRefresh: function () {
+    this.loadInitialData();
+    setTimeout(() => {
+      wx.stopPullDownRefresh();
+    }, 1000);
+  },
+
   clearTimer: function () {
     if (this.updateTimer) {
       clearInterval(this.updateTimer);
@@ -53,7 +131,30 @@ Page({
         deviceInfo: JSON.parse(deviceInfo),
         deviceConnected: JSON.parse(deviceInfo).status === 1
       });
+    } else {
+      this.setData({
+        deviceInfo: {
+          deviceSn: 'SN-20240115-A001',
+          firmwareVersion: 'V1.2.3',
+          battery: 85
+        },
+        deviceConnected: true
+      });
     }
+  },
+
+  loadInitialData: function () {
+    const data = simulator.generateAllData();
+    this.setData({
+      networkStatus: data.networkStatus,
+      selfCheckList: data.selfCheckList,
+      riderInfo: data.riderInfo,
+      telemetryData: data.telemetryData,
+      locationData: data.locationData,
+      vitalSigns: data.vitalSigns,
+      helmetStatus: data.helmetStatus,
+      environmentData: data.environmentData
+    });
   },
 
   startDataUpdate: function () {
@@ -65,14 +166,22 @@ Page({
         return;
       }
 
-      const newData = {
-        heartRate: Math.floor(60 + Math.random() * 30),
-        temperature: (36.0 + Math.random() * 1.5).toFixed(1),
-        speed: (15 + Math.random() * 20).toFixed(1),
-        posture: ['normal', 'normal', 'normal', 'low_head'][Math.floor(Math.random() * 4)]
-      };
+      const data = simulator.generateAllData();
       this.setData({
-        realtimeData: newData
+        networkStatus: data.networkStatus,
+        selfCheckList: data.selfCheckList,
+        riderInfo: data.riderInfo,
+        telemetryData: data.telemetryData,
+        locationData: data.locationData,
+        vitalSigns: data.vitalSigns,
+        helmetStatus: data.helmetStatus,
+        environmentData: data.environmentData,
+        realtimeData: {
+          heartRate: data.vitalSigns.heartRate,
+          temperature: parseFloat(data.vitalSigns.bodyTemp),
+          speed: parseFloat(data.telemetryData.speed),
+          posture: data.telemetryData.posture
+        }
       });
     }, 3000);
   },
@@ -106,6 +215,18 @@ Page({
       tilt: '倾斜'
     };
     return labels[posture] || posture;
+  },
+
+  getStatusColor: function (status) {
+    if (status === 'normal') return '#4CAF50';
+    if (status === 'warning') return '#FFB74D';
+    return '#E57373';
+  },
+
+  toggleTelemetryPanel: function () {
+    this.setData({
+      telemetryPanelExpanded: !this.data.telemetryPanelExpanded
+    });
   },
 
   toggleLED: function (e) {
@@ -167,6 +288,7 @@ Page({
     });
 
     setTimeout(() => {
+      this.loadInitialData();
       wx.hideLoading();
       wx.showToast({
         title: '同步完成',
