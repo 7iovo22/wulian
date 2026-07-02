@@ -66,9 +66,19 @@ function doRequest(options, retryCount = 0) {
   }
 
   const token = wx.getStorageSync('token');
+  let userId = '';
+  try {
+    const userInfoStr = wx.getStorageSync('userInfo');
+    if (userInfoStr) {
+      const userInfo = typeof userInfoStr === 'string' ? JSON.parse(userInfoStr) : userInfoStr;
+      userId = userInfo?.id || '';
+    }
+  } catch (e) {
+    console.error('[Request] Parse userInfo error:', e);
+  }
   const defaultHeader = {
     'Content-Type': 'application/json',
-    'X-User-Id': wx.getStorageSync('userInfo')?.id || ''
+    'X-User-Id': userId
   };
 
   if (token) {

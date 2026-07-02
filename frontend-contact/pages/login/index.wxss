@@ -1,0 +1,260 @@
+.login-container {
+  padding: 60rpx 40rpx;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #4FC3F7 0%, #E1F5FE 100%);
+}
+
+.logo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.logo {
+  width: 160rpx;
+  height: 160rpx;
+  background: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 32rpx rgba(79, 195, 247, 0.3);
+  margin-bottom: 24rpx;
+}
+
+.logo-icon {
+  font-size: 72rpx;
+}
+
+.app-title {
+  font-size: 44rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 8rpx;
+}
+
+.app-subtitle {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.login-mode-switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32rpx;
+}
+
+.mode-label {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 8rpx 24rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20rpx;
+}
+
+.form-card {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.08);
+}
+
+.input-item {
+  display: flex;
+  align-items: center;
+  height: 100rpx;
+  border-bottom: 1rpx solid #EEEEEE;
+  padding: 0 8rpx;
+}
+
+.input-item:last-child {
+  border-bottom: none;
+}
+
+.input-label {
+  width: 160rpx;
+  font-size: 28rpx;
+  color: #333333;
+}
+
+.input-field {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333333;
+}
+
+.password-item {
+  height: auto;
+  padding: 20rpx 8rpx;
+}
+
+.password-input-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.icon-btn {
+  font-size: 36rpx;
+  margin-left: 16rpx;
+  width: 60rpx;
+  text-align: center;
+}
+
+.password-strength {
+  padding: 16rpx 8rpx;
+  background: #FAFAFA;
+  margin-top: 16rpx;
+  border-radius: 8rpx;
+}
+
+.strength-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.strength-item {
+  flex: 1;
+  height: 8rpx;
+  border-radius: 4rpx;
+  margin-right: 8rpx;
+}
+
+.strength-item:last-child {
+  margin-right: 0;
+}
+
+.strength-text {
+  font-size: 24rpx;
+}
+
+.code-row {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.code-input {
+  flex: 1;
+  margin-right: 16rpx;
+}
+
+.code-btn {
+  width: 160rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #4FC3F7;
+  padding: 12rpx 0;
+  border: 1rpx solid #4FC3F7;
+  border-radius: 8rpx;
+}
+
+.code-btn.disabled {
+  color: #CCCCCC;
+  border-color: #CCCCCC;
+}
+
+.forgot-password {
+  text-align: right;
+  margin-top: 20rpx;
+}
+
+.text-link {
+  font-size: 26rpx;
+  color: #4FC3F7;
+}
+
+.text-muted {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #4FC3F7 0%, #29B6F6 100%);
+  color: #FFFFFF;
+  border-radius: 40rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: 500;
+  margin-top: 40rpx;
+  box-shadow: 0 8rpx 24rpx rgba(79, 195, 247, 0.4);
+}
+
+.btn-primary:active {
+  opacity: 0.85;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.9);
+  color: #4FC3F7;
+  border-radius: 40rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: 500;
+  margin-top: 24rpx;
+  border: 1rpx solid #4FC3F7;
+}
+
+.btn-secondary:active {
+  background: rgba(79, 195, 247, 0.1);
+}
+
+.footer-tip {
+  text-align: center;
+  margin-top: 40rpx;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 600rpx;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32rpx;
+  border-bottom: 1rpx solid #EEEEEE;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.modal-close {
+  font-size: 48rpx;
+  color: #999999;
+  line-height: 1;
+}
+
+.modal-body {
+  padding: 32rpx;
+}
+
+.modal-footer {
+  padding: 24rpx 32rpx 32rpx;
+}

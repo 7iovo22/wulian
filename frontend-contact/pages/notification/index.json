@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "告警通知",
+  "navigationBarBackgroundColor": "#4FC3F7",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": true
+}

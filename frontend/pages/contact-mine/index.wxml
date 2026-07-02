@@ -1,0 +1,37 @@
+<view class="page-container">
+  <view class="custom-navbar">
+    <view class="navbar-status-bar"></view>
+    <view class="navbar-content">
+      <view class="navbar-back" bindtap="goBack">
+        <text class="back-icon">←</text>
+      </view>
+      <view class="navbar-title">我的</view>
+      <view class="navbar-placeholder"></view>
+    </view>
+  </view>
+
+  <view class="header">
+    <view class="avatar">
+      <text class="avatar-icon">👤</text>
+    </view>
+    <view class="user-info">
+      <text class="user-name">{{userInfo && userInfo.nickname ? userInfo.nickname : '紧急联系人'}}</text>
+      <text class="user-phone">{{maskedPhone}}</text>
+    </view>
+  </view>
+
+  <view class="logout-section">
+    <button class="logout-btn" bindtap="logout">退出登录</button>
+  </view>
+
+  <view class="bottom-nav">
+    <view class="nav-item" bindtap="goBack">
+      <text class="nav-icon">🏠</text>
+      <text class="nav-text">首页</text>
+    </view>
+    <view class="nav-item active">
+      <text class="nav-icon">👤</text>
+      <text class="nav-text">我的</text>
+    </view>
+  </view>
+</view>

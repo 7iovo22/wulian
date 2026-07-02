@@ -1,6 +1,6 @@
 function formatDate(date, format = 'YYYY-MM-DD HH:mm:ss') {
   if (!date) return '';
-  
+
   const d = new Date(date);
   const year = d.getFullYear();
   const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -8,7 +8,7 @@ function formatDate(date, format = 'YYYY-MM-DD HH:mm:ss') {
   const hours = String(d.getHours()).padStart(2, '0');
   const minutes = String(d.getMinutes()).padStart(2, '0');
   const seconds = String(d.getSeconds()).padStart(2, '0');
-  
+
   return format
     .replace('YYYY', year)
     .replace('MM', month)
@@ -20,21 +20,21 @@ function formatDate(date, format = 'YYYY-MM-DD HH:mm:ss') {
 
 function formatDuration(seconds) {
   if (!seconds || seconds < 0) return '00:00:00';
-  
+
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const secs = seconds % 60;
-  
+
   return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 }
 
 function formatDistance(meters) {
   if (!meters || meters < 0) return '0m';
-  
+
   if (meters >= 1000) {
     return `${(meters / 1000).toFixed(2)}km`;
   }
-  
+
   return `${meters.toFixed(0)}m`;
 }
 
@@ -108,15 +108,15 @@ function throttle(fn, delay = 300) {
 
 function deepClone(obj) {
   if (obj === null || typeof obj !== 'object') return obj;
-  
+
   if (obj instanceof Date) {
     return new Date(obj.getTime());
   }
-  
+
   if (obj instanceof Array) {
     return obj.map(item => deepClone(item));
   }
-  
+
   if (obj instanceof Object) {
     const clonedObj = {};
     for (const key in obj) {
@@ -174,12 +174,12 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   const φ2 = lat2 * Math.PI / 180;
   const Δφ = (lat2 - lat1) * Math.PI / 180;
   const Δλ = (lon2 - lon1) * Math.PI / 180;
-  
+
   const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
     Math.cos(φ1) * Math.cos(φ2) *
     Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  
+
   return R * c;
 }
 
@@ -262,11 +262,11 @@ function navigateTo(url, params = {}) {
   const query = Object.keys(params)
     .map(key => `${key}=${encodeURIComponent(params[key])}`)
     .join('&');
-  
+
   if (query) {
     url = `${url}?${query}`;
   }
-  
+
   wx.navigateTo({ url });
 }
 
@@ -274,11 +274,11 @@ function redirectTo(url, params = {}) {
   const query = Object.keys(params)
     .map(key => `${key}=${encodeURIComponent(params[key])}`)
     .join('&');
-  
+
   if (query) {
     url = `${url}?${query}`;
   }
-  
+
   wx.redirectTo({ url });
 }
 
@@ -286,11 +286,11 @@ function reLaunch(url, params = {}) {
   const query = Object.keys(params)
     .map(key => `${key}=${encodeURIComponent(params[key])}`)
     .join('&');
-  
+
   if (query) {
     url = `${url}?${query}`;
   }
-  
+
   wx.reLaunch({ url });
 }
 
@@ -392,12 +392,63 @@ function openLocation(latitude, longitude, scale = 18, name = '', address = '') 
   });
 }
 
+function formatRelativeTime(timestamp) {
+  if (!timestamp) return '--';
+  const now = Date.now();
+  const diff = now - timestamp;
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+
+  if (minutes < 1) return '刚刚';
+  if (minutes < 60) return `${minutes}分钟前`;
+  if (hours < 24) return `${hours}小时前`;
+  if (days < 7) return `${days}天前`;
+  return formatDate(timestamp, 'MM-DD HH:mm');
+}
+
+function cacheSet(key, value, expireSeconds) {
+  try {
+    const data = {
+      value: value,
+      expire: expireSeconds ? Date.now() + expireSeconds * 1000 : null
+    };
+    wx.setStorageSync(key, data);
+  } catch (e) {
+    console.error('cacheSet error:', e);
+  }
+}
+
+function cacheGet(key) {
+  try {
+    const data = wx.getStorageSync(key);
+    if (!data) return null;
+    if (data.expire && Date.now() > data.expire) {
+      wx.removeStorageSync(key);
+      return null;
+    }
+    return data.value;
+  } catch (e) {
+    console.error('cacheGet error:', e);
+    return null;
+  }
+}
+
+function cacheRemove(key) {
+  try {
+    wx.removeStorageSync(key);
+  } catch (e) {
+    console.error('cacheRemove error:', e);
+  }
+}
+
 module.exports = {
   formatDate,
   formatDuration,
   formatDistance,
   formatSpeed,
   formatPhone,
+  maskPhone: formatPhone,
   formatNumber,
   formatText,
   formatTime,
@@ -433,5 +484,9 @@ module.exports = {
   previewImage,
   saveImageToPhotos,
   getLocation,
-  openLocation
+  openLocation,
+  formatRelativeTime,
+  cacheSet,
+  cacheGet,
+  cacheRemove
 };

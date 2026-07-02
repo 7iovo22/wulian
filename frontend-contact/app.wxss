@@ -1,0 +1,142 @@
+page {
+  background-color: #F0F4F8;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.container {
+  padding: 20rpx;
+}
+
+.card {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #4FC3F7 0%, #29B6F6 100%);
+  color: #FFFFFF;
+  border-radius: 40rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: 500;
+  margin-top: 40rpx;
+}
+
+.btn-primary:active {
+  opacity: 0.85;
+}
+
+.btn-secondary {
+  background: #F5F7FA;
+  color: #666666;
+  border-radius: 40rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  font-size: 32rpx;
+  margin-top: 20rpx;
+}
+
+.input-item {
+  display: flex;
+  align-items: center;
+  height: 96rpx;
+  border-bottom: 1rpx solid #EEEEEE;
+  padding: 0 8rpx;
+}
+
+.input-item:last-child {
+  border-bottom: none;
+}
+
+.input-label {
+  width: 160rpx;
+  font-size: 28rpx;
+  color: #333333;
+}
+
+.input-field {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333333;
+}
+
+.icon-btn {
+  font-size: 26rpx;
+  color: #4FC3F7;
+}
+
+.text-link {
+  font-size: 26rpx;
+  color: #4FC3F7;
+}
+
+.text-muted {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.text-danger {
+  font-size: 26rpx;
+  color: #EF5350;
+}
+
+.text-success {
+  font-size: 26rpx;
+  color: #66BB6A;
+}
+
+.text-warning {
+  font-size: 26rpx;
+  color: #FFA726;
+}
+
+.text-info {
+  font-size: 26rpx;
+  color: #4FC3F7;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.mt-20 {
+  margin-top: 20rpx;
+}
+
+.mt-40 {
+  margin-top: 40rpx;
+}
+
+.mb-20 {
+  margin-bottom: 20rpx;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}

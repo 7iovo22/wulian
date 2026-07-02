@@ -19,7 +19,7 @@
       />
     </view>
     
-    <view class="form-item code-item">
+    <view wx:if="{{currentRole === 'rider'}}" class="form-item code-item">
       <input 
         class="input code-input" 
         placeholder="请输入验证码" 
@@ -33,7 +33,23 @@
       </button>
     </view>
 
+    <view wx:if="{{currentRole === 'contact'}}" class="form-item">
+      <input 
+        class="input" 
+        placeholder="请输入密码" 
+        bindinput="onPasswordInput"
+        maxlength="20"
+        type="text"
+        password="{{true}}"
+        value="{{password}}"
+      />
+    </view>
+
     <button class="btn-primary login-btn" bindtap="login">登录</button>
+    
+    <view wx:if="{{currentRole === 'contact'}}" class="register-btn-wrap">
+      <button class="btn-secondary register-btn" bindtap="goToRegister">注册</button>
+    </view>
     
     <view class="login-tips">
       <text>登录即表示同意</text>
@@ -44,7 +60,7 @@
   </view>
 
   <view class="login-bottom">
-    <view class="wechat-login" bindtap="wechatLogin">
+    <view wx:if="{{currentRole === 'rider'}}" class="wechat-login" bindtap="wechatLogin">
       <image src="https://picsum.photos/48/48" mode="aspectFill" class="wechat-icon"></image>
       <text>微信快捷登录</text>
     </view>

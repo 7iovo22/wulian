@@ -92,7 +92,7 @@ module.exports = {
       </view>
       <view class="risk-analysis">
         <view class="risk-score-card">
-          <view class="score-circle" style="background: conic-gradient({{riskColor}} 0deg, {{riskColor}} {{(reportData.riskScore || 0) * 3.6}}deg, #E1E5E9 {{(reportData.riskScore || 0) * 3.6}}deg, #E1E5E9 360deg);">
+          <view class="score-circle" style="background: conic-gradient({{riskColor}} 0deg, {{riskColor}} {{(reportData && reportData.riskScore ? reportData.riskScore : 0) * 3.6}}deg, #E1E5E9 {{(reportData && reportData.riskScore ? reportData.riskScore : 0) * 3.6}}deg, #E1E5E9 360deg);">
             <view class="score-inner">
               <view class="score-value">{{format.formatNumber(reportData.riskScore)}}</view>
               <view class="score-label">风险评分</view>
@@ -100,9 +100,9 @@ module.exports = {
           </view>
         </view>
         <view class="risk-factors">
-          <view class="risk-factor" wx:for="{{reportData.riskFactors || []}}" wx:key="name">
+          <view class="risk-factor" wx:for="{{reportData && reportData.riskFactors ? reportData.riskFactors : []}}" wx:key="name">
             <view class="factor-bar">
-              <view class="factor-fill" style="width: {{item.score || 0}}%; background: {{(item.score || 0) >= 80 ? '#E57373' : (item.score || 0) >= 50 ? '#FFB74D' : '#4CAF50'}};"></view>
+              <view class="factor-fill" style="width: {{item && item.score ? item.score : 0}}%; background: {{(item && item.score ? item.score : 0) >= 80 ? '#E57373' : (item && item.score ? item.score : 0) >= 50 ? '#FFB74D' : '#4CAF50'}};"></view>
             </view>
             <view class="factor-info">
               <text class="factor-name">{{format.formatText(item.name, '风险因素')}}</text>

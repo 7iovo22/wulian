@@ -31,7 +31,7 @@ module.exports = {
 <view class="container">
   <view class="header">
     <view class="user-info">
-      <image src="{{userInfo.avatar || 'https://picsum.photos/80/80'}}" mode="aspectFill" class="avatar"></image>
+      <image src="{{userInfo && userInfo.avatar ? userInfo.avatar : 'https://picsum.photos/80/80'}}" mode="aspectFill" class="avatar"></image>
       <view class="user-detail">
         <view class="user-name">{{format.formatText(userInfo.nickname, '昵称')}}</view>
         <view class="user-status">在线</view>
@@ -135,7 +135,7 @@ module.exports = {
       </view>
       <view class="device-battery">
         <view class="battery-bar">
-          <view class="battery-fill" style="width: {{deviceInfo.battery || 0}}%;"></view>
+          <view class="battery-fill" style="width: {{deviceInfo && deviceInfo.battery ? deviceInfo.battery : 0}}%;"></view>
         </view>
         <text class="battery-text">{{format.formatNumber(deviceInfo.battery)}}%</text>
       </view>

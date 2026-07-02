@@ -1,0 +1,115 @@
+<view class="page-container">
+  <view class="header">
+    <view class="header-left">
+      <view class="avatar">
+        <text class="avatar-icon">👤</text>
+      </view>
+      <view class="user-info">
+        <text class="user-name">{{userInfo && userInfo.nickname ? userInfo.nickname : '紧急联系人'}}</text>
+        <text class="user-phone">{{userInfo && userInfo.phone ? (userInfo.phone.substring(0,3) + '****' + userInfo.phone.substring(7)) : ''}}</text>
+      </view>
+    </view>
+    <view class="header-right">
+      <view class="notification-btn" bindtap="goToNotifications">
+        <text class="notification-icon">🔔</text>
+        <view wx:if="{{notificationCount > 0}}" class="notification-badge">
+          <text class="badge-text">{{notificationCount > 99 ? '99+' : notificationCount}}</text>
+        </view>
+      </view>
+      <view class="logout-btn" bindtap="logout">
+        <text class="logout-icon">📤</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="stats-card">
+    <view class="stat-item">
+      <text class="stat-value">{{riders.length}}</text>
+      <text class="stat-label">关联骑手</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-value alarm-value">{{alarmCount}}</text>
+      <text class="stat-label">待处理告警</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-value online-value">{{onlineCount}}</text>
+      <text class="stat-label">在线骑手</text>
+    </view>
+  </view>
+
+  <view class="section-header">
+    <text class="section-title">关联骑手列表</text>
+    <text class="section-subtitle">自动匹配将您设为紧急联系人的骑手</text>
+  </view>
+
+  <view wx:if="{{riders.length === 0}}" class="empty-state">
+    <text class="empty-icon">🔍</text>
+    <text class="empty-title">暂无关联骑手</text>
+    <text class="empty-desc">当骑手将您的手机号添加为紧急联系人后，会自动显示在这里</text>
+  </view>
+
+  <view wx:else class="rider-list">
+    <view 
+      wx:for="{{riders}}" 
+      wx:key="riderId" 
+      class="rider-card"
+      bindtap="goToRiderDetail"
+      data-rider-id="{{item.riderId}}"
+      data-rider-nickname="{{item.riderNickname}}"
+    >
+      <view class="rider-info">
+        <view class="rider-avatar">
+          <text class="rider-avatar-icon">🛵</text>
+          <view class="online-dot {{item.online ? 'online' : 'offline'}}"></view>
+        </view>
+        <view class="rider-detail">
+          <view class="rider-name-row">
+            <text class="rider-name">{{item.riderNickname}}</text>
+            <view class="relation-tag">{{item.relation}}</view>
+          </view>
+          <view class="rider-meta">
+            <text class="rider-phone">{{item.maskedPhone}}</text>
+            <text class="activity-time">{{item.relativeTime}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="rider-status">
+        <view class="safety-tag" style="background: {{item.safetyStatus === 'safe' ? '#E6F7FF' : (item.safetyStatus === 'warning' ? '#FFF7E6' : '#FFF1F0')}}; color: {{item.safetyStatus === 'safe' ? '#1890FF' : (item.safetyStatus === 'warning' ? '#FA8C16' : '#FF4D4F')}};">
+          {{item.safetyStatus === 'safe' ? '安全' : (item.safetyStatus === 'warning' ? '预警' : '危险')}}
+        </view>
+        <view wx:if="{{item.alarmCount > 0}}" class="alarm-badge">
+          <text class="alarm-count">{{item.alarmCount}}</text>
+        </view>
+        <view class="contact-btn" catchtap="makePhoneCall" data-phone="{{item.riderPhone}}">
+          <text class="contact-icon">📞</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="location-section">
+      <text class="location-title">实时位置</text>
+      <view 
+        wx:for="{{riders}}" 
+        wx:key="riderId" 
+        class="location-item"
+        bindtap="goToRiderDetail"
+        data-rider-id="{{item.riderId}}"
+        data-rider-nickname="{{item.riderNickname}}"
+      >
+        <view class="location-info">
+          <text class="location-icon">📍</text>
+          <view class="location-text">
+            <text class="location-name">{{item.riderNickname}}</text>
+            <text class="location-address">{{item && item.address ? item.address : '暂无位置信息'}}</text>
+          </view>
+        </view>
+        <view class="location-time">
+          <text class="time-text">{{item && item.relativeTime ? item.relativeTime : '--'}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

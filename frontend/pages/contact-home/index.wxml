@@ -1,0 +1,171 @@
+<view class="page-container">
+  <view class="custom-navbar">
+    <view class="navbar-status-bar"></view>
+    <view class="navbar-content">
+      <view class="navbar-title">紧急联系人</view>
+    </view>
+  </view>
+
+  <view class="header">
+    <view class="header-left">
+      <view class="avatar">
+        <text class="avatar-icon">👤</text>
+      </view>
+      <view class="user-info">
+        <text class="user-name">{{userInfo && userInfo.nickname ? userInfo.nickname : '紧急联系人'}}</text>
+        <text class="user-phone">{{maskedPhone}}</text>
+      </view>
+    </view>
+    <view class="header-right">
+      <view class="notification-btn" bindtap="goToNotifications">
+        <text class="notification-icon">🔔</text>
+        <view wx:if="{{notificationCount > 0}}" class="notification-badge">
+          <text class="badge-text">{{notificationCount > 99 ? '99+' : notificationCount}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="stats-card">
+    <view class="stat-item">
+      <text class="stat-value">{{riders.length}}</text>
+      <text class="stat-label">关联骑手</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-value alarm-value">{{alarmCount}}</text>
+      <text class="stat-label">待处理告警</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-value online-value">{{onlineCount}}</text>
+      <text class="stat-label">在线骑手</text>
+    </view>
+  </view>
+
+  <view class="section-header">
+    <text class="section-title">关联骑手列表</text>
+    <text class="section-subtitle">自动匹配将您设为紧急联系人的骑手</text>
+  </view>
+
+  <view wx:if="{{riders.length === 0}}" class="empty-state">
+    <text class="empty-icon">🔍</text>
+    <text class="empty-title">暂无关联骑手</text>
+    <text class="empty-desc">当骑手将您的手机号添加为紧急联系人后，会自动显示在这里</text>
+  </view>
+
+  <view wx:else class="rider-list">
+    <view 
+      wx:for="{{riders}}" 
+      wx:key="riderId" 
+      class="rider-card"
+      bindtap="goToRiderDetail"
+      data-rider-id="{{item.riderId}}"
+    >
+      <view class="rider-info">
+        <view class="rider-avatar">
+          <text class="rider-avatar-icon">🛵</text>
+          <view class="online-dot {{item.online ? 'online' : 'offline'}}"></view>
+        </view>
+        <view class="rider-detail">
+          <view class="rider-name-row">
+            <text class="rider-name">{{item.riderNickname}}</text>
+            <view class="relation-tag">{{item.relation}}</view>
+          </view>
+          <view class="rider-meta">
+            <text class="rider-phone">{{item.maskedPhone}}</text>
+            <text class="activity-time">{{item.relativeTime}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="rider-status">
+        <view class="safety-tag" style="background: {{item.safetyStatusBg}}; color: {{item.safetyStatusColor}};">
+          {{item.safetyStatusText}}
+        </view>
+        <view class="contact-btn" catchtap="makePhoneCall" data-phone="{{item.riderPhone}}">
+          <text class="contact-icon">📞</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="bottom-nav">
+    <view class="nav-item {{currentTab === 'home' ? 'active' : ''}}" bindtap="switchTab" data-tab="home">
+      <text class="nav-icon">🏠</text>
+      <text class="nav-text">首页</text>
+    </view>
+    <view class="nav-item" bindtap="switchTab" data-tab="mine">
+      <text class="nav-icon">👤</text>
+      <text class="nav-text">我的</text>
+    </view>
+  </view>
+</view>
+
+<view wx:if="{{showDetailModal && selectedRider}}" class="modal-mask" bindtap="closeDetailModal">
+  <view class="detail-modal" catchtap="">
+    <view class="modal-header" style="background: {{selectedRider.safetyStatusBg}};">
+      <view class="modal-close" bindtap="closeDetailModal">
+        <text class="close-icon">×</text>
+      </view>
+      <view class="modal-status" style="background: {{selectedRider.safetyStatusBg}}; color: {{selectedRider.safetyStatusColor}};">
+        {{selectedRider.safetyStatusText}}
+      </view>
+    </view>
+
+    <view class="modal-content">
+      <view class="modal-rider-info">
+        <view class="modal-avatar">
+          <text class="modal-avatar-icon">🛵</text>
+          <view class="online-dot {{selectedRider.online ? 'online' : 'offline'}}"></view>
+        </view>
+        <view class="modal-basic">
+          <view class="modal-name-row">
+            <text class="modal-name">{{selectedRider.riderNickname}}</text>
+            <view class="relation-tag">{{selectedRider.relation}}</view>
+          </view>
+          <text class="modal-phone">{{selectedRider.maskedPhone}}</text>
+        </view>
+        <view class="modal-call-btn" bindtap="makePhoneCall">
+          <text class="modal-call-icon">📞</text>
+        </view>
+      </view>
+
+      <view class="modal-info-card">
+        <view class="modal-info-title">安全评分</view>
+        <view class="modal-score-display">
+          <text class="modal-score-value">{{selectedRider.safetyScore}}</text>
+          <text class="modal-score-unit">分</text>
+        </view>
+        <view class="modal-score-bar">
+          <view class="modal-score-fill" style="width: {{selectedRider.safetyScore}}%; background: {{selectedRider.safetyScore >= 80 ? '#52C41A' : (selectedRider.safetyScore >= 60 ? '#FAAD14' : '#FF4D4F')}};"></view>
+        </view>
+      </view>
+
+      <view class="modal-info-card">
+        <view class="modal-info-title">实时位置</view>
+        <view class="modal-location">
+          <text class="modal-location-icon">📍</text>
+          <text class="modal-location-text">{{selectedRider.address || '暂无位置信息'}}</text>
+        </view>
+        <text class="modal-location-time">更新时间：{{selectedRider.relativeTime}}</text>
+      </view>
+
+      <view class="modal-info-card">
+        <view class="modal-info-title">预警统计</view>
+        <view class="modal-alarm">
+          <text class="modal-alarm-value">{{selectedRider.alarmCount || 0}}</text>
+          <text class="modal-alarm-label">待处理预警</text>
+        </view>
+      </view>
+
+      <view class="modal-info-card">
+        <view class="modal-info-title">在线状态</view>
+        <view class="modal-online">
+          <view class="online-dot-large {{selectedRider.online ? 'online' : 'offline'}}"></view>
+          <text class="modal-online-text">{{selectedRider.online ? '在线' : '离线'}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

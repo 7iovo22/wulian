@@ -1,6 +1,12 @@
 const { request, get, post, put, delete: del } = require('./request');
 
 module.exports = {
+  contact: {
+    register: (data) => post('/api/contact/register', data),
+    login: (data) => post('/api/contact/login', data),
+    getRiders: () => get('/api/contact/riders'),
+    getNotifications: () => get('/api/contact/notifications')
+  },
   user: {
     wechatLogin: (data) => post('/api/user/wechat/login', data),
     phoneBind: (data) => post('/api/user/phone/bind', data),

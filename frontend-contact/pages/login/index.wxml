@@ -1,0 +1,166 @@
+<view class="login-container">
+  <view class="logo-section">
+    <view class="logo">
+      <text class="logo-icon">🛡️</text>
+    </view>
+    <text class="app-title">紧急联系人</text>
+    <text class="app-subtitle">守护骑手安全</text>
+  </view>
+
+  <view class="login-mode-switch">
+    <text class="mode-label">紧急联系人登录</text>
+  </view>
+
+  <view class="form-card">
+    <view class="input-item">
+      <text class="input-label">手机号</text>
+      <input 
+        class="input-field" 
+        placeholder="请输入11位手机号" 
+        type="number" 
+        maxlength="11"
+        value="{{phone}}"
+        bindinput="onPhoneInput"
+      />
+    </view>
+
+    <view class="input-item password-item">
+      <text class="input-label">密码</text>
+      <view class="password-input-wrap">
+        <input 
+          class="input-field" 
+          placeholder="请输入6-20位密码" 
+          type="{{passwordVisible ? 'text' : 'password'}}" 
+          value="{{password}}"
+          bindinput="onPasswordInput"
+          confirm-type="done"
+        />
+        <text class="icon-btn" bindtap="togglePasswordVisible">
+          {{passwordVisible ? '🙈' : '👁️'}}
+        </text>
+      </view>
+    </view>
+
+    <view wx:if="{{passwordStrengthText}}" class="password-strength">
+      <view class="strength-bar">
+        <view class="strength-item {{passwordStrength >= 1 ? 'active' : ''}}" style="background: {{passwordStrength >= 1 ? passwordStrengthColor : '#EEEEEE'}}"></view>
+        <view class="strength-item {{passwordStrength >= 2 ? 'active' : ''}}" style="background: {{passwordStrength >= 2 ? passwordStrengthColor : '#EEEEEE'}}"></view>
+        <view class="strength-item {{passwordStrength >= 3 ? 'active' : ''}}" style="background: {{passwordStrength >= 3 ? passwordStrengthColor : '#EEEEEE'}}"></view>
+        <view class="strength-item {{passwordStrength >= 4 ? 'active' : ''}}" style="background: {{passwordStrength >= 4 ? passwordStrengthColor : '#EEEEEE'}}"></view>
+        <view class="strength-item {{passwordStrength >= 5 ? 'active' : ''}}" style="background: {{passwordStrength >= 5 ? passwordStrengthColor : '#EEEEEE'}}"></view>
+      </view>
+      <text class="strength-text" style="color: {{passwordStrengthColor}}">密码强度：{{passwordStrengthText}}</text>
+    </view>
+
+    <view wx:if="{{currentTab === 'register'}}" class="input-item password-item">
+      <text class="input-label">确认密码</text>
+      <view class="password-input-wrap">
+        <input 
+          class="input-field" 
+          placeholder="请再次输入密码" 
+          type="{{confirmPasswordVisible ? 'text' : 'password'}}" 
+          value="{{confirmPassword}}"
+          bindinput="onConfirmPasswordInput"
+          confirm-type="done"
+        />
+        <text class="icon-btn" bindtap="toggleConfirmPasswordVisible">
+          {{confirmPasswordVisible ? '🙈' : '👁️'}}
+        </text>
+      </view>
+    </view>
+
+    <view wx:if="{{currentTab === 'register'}}" class="input-item">
+      <text class="input-label">昵称</text>
+      <input 
+        class="input-field" 
+        placeholder="请输入昵称（选填）" 
+        value="{{nickname}}"
+        bindinput="onNicknameInput"
+      />
+    </view>
+  </view>
+
+  <view class="btn-primary" bindtap="login">
+    登录
+  </view>
+
+  <view class="btn-secondary" bindtap="switchTab" data-tab="register">
+    注册新账号
+  </view>
+
+  <view wx:if="{{currentTab === 'login'}}" class="forgot-password">
+    <text class="text-link" bindtap="showResetPassword">忘记密码？</text>
+  </view>
+
+  <view wx:if="{{currentTab === 'register'}}" class="forgot-password">
+    <text class="text-link" bindtap="switchTab" data-tab="login">返回登录</text>
+  </view>
+
+  <view class="footer-tip">
+    <text class="text-muted">登录后自动关联将您设为紧急联系人的骑手</text>
+  </view>
+</view>
+
+<view wx:if="{{showResetModal}}" class="modal-overlay" bindtap="closeResetModal">
+  <view class="modal-content" catchtap="closeResetModal">
+    <view class="modal-header">
+      <text class="modal-title">重置密码</text>
+      <text class="modal-close" bindtap="closeResetModal">×</text>
+    </view>
+    <view class="modal-body">
+      <view class="input-item">
+        <text class="input-label">手机号</text>
+        <input 
+          class="input-field" 
+          placeholder="请输入手机号" 
+          type="number" 
+          maxlength="11"
+          value="{{phone}}"
+          bindinput="onPhoneInput"
+        />
+      </view>
+      <view class="input-item">
+        <text class="input-label">验证码</text>
+        <view class="code-row">
+          <input 
+            class="input-field code-input" 
+            placeholder="请输入验证码" 
+            type="number" 
+            maxlength="6"
+            value="{{code}}"
+            bindinput="onCodeInput"
+          />
+          <text 
+            class="code-btn {{codeBtnDisabled ? 'disabled' : ''}}" 
+            bindtap="getCode"
+          >
+            {{codeBtnText}}
+          </text>
+        </view>
+      </view>
+      <view class="input-item">
+        <text class="input-label">新密码</text>
+        <input 
+          class="input-field" 
+          placeholder="请输入新密码" 
+          type="password" 
+          value="{{password}}"
+          bindinput="onPasswordInput"
+        />
+      </view>
+      <view class="input-item">
+        <text class="input-label">确认密码</text>
+        <input 
+          class="input-field" 
+          placeholder="请再次输入密码" 
+          type="password" 
+          value="{{confirmPassword}}"
+          bindinput="onConfirmPasswordInput"
+        />
+      </view>
+    </view>
+    <view class="modal-footer">
+      <view class="btn-primary" bindtap="resetPassword">确认重置</view>
+    </view>
+  </view>
+</view>

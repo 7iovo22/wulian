@@ -1,0 +1,64 @@
+<view class="page-container">
+  <view class="header">
+    <view class="header-title">
+      <text class="title-text">告警通知中心</text>
+    </view>
+  </view>
+
+  <scroll-view class="filter-scroll" scroll-x>
+    <view class="filter-tabs">
+      <view 
+        wx:for="{{types}}" 
+        wx:key="value" 
+        class="filter-tab {{filterType === item.value ? 'active' : ''}}"
+        bindtap="filterChanged"
+        data-type="{{item.value}}"
+      >
+        {{item.label}}
+        <view wx:if="{{filterType === item.value}}" class="filter-indicator"></view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <scroll-view class="notification-list" scroll-y bindscrolltolower="loadMore">
+    <view wx:if="{{loading}}" class="loading-state">
+      <text class="loading-text">加载中...</text>
+    </view>
+
+    <view wx:elif="{{filteredNotifications.length === 0}}" class="empty-state">
+      <text class="empty-icon">📭</text>
+      <text class="empty-title">暂无通知</text>
+    </view>
+
+    <view 
+      wx:else
+      wx:for="{{filteredNotifications}}" 
+      wx:key="id" 
+      class="notification-item {{item.read ? 'read' : ''}}"
+      bindtap="goToRiderDetail"
+      data-id="{{item.id}}"
+      data-rider-id="{{item.riderId}}"
+      data-rider-nickname="{{item.riderNickname}}"
+    >
+      <view class="notification-icon-wrap" style="background: {{item.read ? '#F5F5F5' : (item.type === 'alarm' ? '#FFF1F0' : (item.type === 'event' ? '#FFF7E6' : '#E6F7FF'))}};">
+        <text class="notification-icon" style="color: {{item.read ? '#999999' : (item.type === 'alarm' ? '#EF5350' : (item.type === 'event' ? '#FA8C16' : '#4FC3F7'))}};">{{item.type === 'alarm' ? '🚨' : (item.type === 'event' ? '📋' : '🔔')}}</text>
+      </view>
+      
+      <view class="notification-content">
+        <view class="notification-header">
+          <text class="notification-title">{{item.title}}</text>
+          <text class="notification-time">{{item.relativeTime}}</text>
+        </view>
+        <text class="notification-desc">{{item.content}}</text>
+        <view class="notification-footer">
+          <text class="notification-source">{{item.riderNickname}}</text>
+          <view class="notification-type-tag" style="background: {{item.type === 'alarm' ? '#FFF1F0' : (item.type === 'event' ? '#FFF7E6' : '#E6F7FF')}}; color: {{item.type === 'alarm' ? '#EF5350' : (item.type === 'event' ? '#FA8C16' : '#4FC3F7')}};">
+            {{item.type === 'alarm' ? '告警' : (item.type === 'event' ? '事件' : '系统')}}
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{!item.read}}" class="unread-dot"></view>
+    </view>
+  </scroll-view>
+</view>

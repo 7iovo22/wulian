@@ -1,5 +1,6 @@
 const app = getApp();
 const api = require('../../utils/api');
+const { formatPhone: maskPhone } = require('../../utils/helpers');
 
 Page({
   data: {
@@ -25,13 +26,23 @@ Page({
     const userInfo = wx.getStorageSync('userInfo');
     const deviceInfo = wx.getStorageSync('deviceInfo');
 
+    const parsedUserInfo = userInfo ? JSON.parse(userInfo) : {};
+    const phone = parsedUserInfo.phone || '';
+
     this.setData({
-      userInfo: userInfo ? JSON.parse(userInfo) : {},
-      hasDevice: !!deviceInfo
+      userInfo: parsedUserInfo,
+      hasDevice: !!deviceInfo,
+      maskedPhone: phone ? maskPhone(phone) : ''
     });
   },
 
   editUserInfo: function () {
+    wx.navigateTo({
+      url: '/pages/settings/index'
+    });
+  },
+
+  goToBindPhone: function () {
     wx.navigateTo({
       url: '/pages/settings/index'
     });

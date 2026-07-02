@@ -80,7 +80,7 @@ module.exports = {
 
     <view class="detail-card" wx:if="{{warning.handleRecords && warning.handleRecords.length > 0}}">
       <view class="detail-title">处理记录</view>
-      <view class="record-item" wx:for="{{warning.handleRecords || []}}" wx:key="index">
+      <view class="record-item" wx:for="{{warning && warning.handleRecords ? warning.handleRecords : []}}" wx:key="index">
         <view class="record-time">{{format.formatTime(item.time)}}</view>
         <view class="record-content">{{format.formatText(item.content, '记录内容')}}</view>
       </view>

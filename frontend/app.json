@@ -1,6 +1,9 @@
 {
   "pages": [
     "pages/login/index",
+    "pages/register/index",
+    "pages/contact-home/index",
+    "pages/contact-mine/index",
     "pages/index/index",
     "pages/device/index",
     "pages/safety/index",

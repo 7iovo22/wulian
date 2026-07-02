@@ -188,8 +188,17 @@ Page({
         contactName: name,
         contactPhone: phone,
         relation: relation
-      }).then(() => {
-        this.loadContacts();
+      }).then((result) => {
+        const newContact = {
+          id: result?.id || Date.now(),
+          name: result?.contactName || name,
+          relation: result?.relation || relation,
+          phone: result?.contactPhone || phone
+        };
+        const newContacts = [...this.data.contacts, newContact];
+        this.setData({
+          contacts: newContacts
+        });
         this.closeModal();
         wx.showToast({
           title: '添加成功',

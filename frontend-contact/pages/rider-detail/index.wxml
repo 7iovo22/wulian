@@ -1,0 +1,209 @@
+<view class="detail-container">
+  <view class="contact-bar">
+    <view class="contact-info">
+      <text class="contact-name">{{riderNickname}}</text>
+      <text class="contact-relation">关联骑手</text>
+    </view>
+    <view class="call-btn" bindtap="makePhoneCall">
+      <text class="call-icon">📞</text>
+    </view>
+  </view>
+
+  <view class="tabs">
+    <view 
+      class="tab-item {{currentTab === 'location' ? 'active' : ''}}" 
+      data-tab="location" 
+      bindtap="switchTab"
+    >
+      <text class="tab-icon">📍</text>
+      <text class="tab-text">实时位置</text>
+    </view>
+    <view 
+      class="tab-item {{currentTab === 'alarm' ? 'active' : ''}}" 
+      data-tab="alarm" 
+      bindtap="switchTab"
+    >
+      <text class="tab-icon">🔔</text>
+      <text class="tab-text">告警通知</text>
+    </view>
+    <view 
+      class="tab-item {{currentTab === 'event' ? 'active' : ''}}" 
+      data-tab="event" 
+      bindtap="switchTab"
+    >
+      <text class="tab-icon">📋</text>
+      <text class="tab-text">安全事件</text>
+    </view>
+    <view 
+      class="tab-item {{currentTab === 'report' ? 'active' : ''}}" 
+      data-tab="report" 
+      bindtap="switchTab"
+    >
+      <text class="tab-icon">📊</text>
+      <text class="tab-text">AI分析</text>
+    </view>
+  </view>
+
+  <view wx:if="{{currentTab === 'location'}}" class="content-section">
+    <view class="map-card">
+      <map 
+        class="map-component"
+        longitude="{{location && location.longitude ? location.longitude : 116.3975}}"
+        latitude="{{location && location.latitude ? location.latitude : 39.9087}}"
+        markers="{{markers}}"
+        scale="15"
+        show-location="true"
+        bindmarkertap="onMarkerTap"
+      ></map>
+      <view class="map-overlay">
+        <view class="map-info">
+          <view class="map-address">
+            <text class="address-icon">📍</text>
+            <text class="address-text">{{location && location.address ? location.address : '暂无位置信息'}}</text>
+          </view>
+          <view class="map-time">
+            <text class="time-icon">⏱️</text>
+            <text class="time-text">更新于 {{location && location.relativeTime ? location.relativeTime : '--'}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="action-card">
+      <view class="action-item" bindtap="makePhoneCall">
+        <text class="action-icon">📞</text>
+        <text class="action-text">联系骑手</text>
+      </view>
+      <view class="action-item">
+        <text class="action-icon">📱</text>
+        <text class="action-text">发送消息</text>
+      </view>
+      <view class="action-item">
+        <text class="action-icon">🚨</text>
+        <text class="action-text">紧急求助</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{currentTab === 'alarm'}}" class="content-section">
+    <view wx:if="{{alarms.length === 0}}" class="empty-state">
+      <text class="empty-icon">🔔</text>
+      <text class="empty-text">暂无告警通知</text>
+    </view>
+    <view wx:else class="alarm-list">
+      <view 
+        wx:for="{{alarms}}" 
+        wx:key="id" 
+        class="alarm-item"
+      >
+        <view class="alarm-left">
+          <view class="alarm-type {{item.level}}">{{item.type}}</view>
+          <view class="alarm-content">
+            <text class="alarm-message">{{item.message}}</text>
+            <text class="alarm-time">{{item.relativeTime}}</text>
+          </view>
+        </view>
+        <view class="alarm-status {{item.status.toLowerCase()}}">
+          {{item.status === 'OPEN' ? '待处理' : item.status === 'ACKED' ? '已确认' : '已解决'}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{currentTab === 'event'}}" class="content-section">
+    <view wx:if="{{events.length === 0}}" class="empty-state">
+      <text class="empty-icon">📋</text>
+      <text class="empty-text">暂无安全事件</text>
+    </view>
+    <view wx:else class="event-list">
+      <view 
+        wx:for="{{events}}" 
+        wx:key="id" 
+        class="event-item"
+      >
+        <view class="event-header">
+          <view class="event-type">{{item.type}}</view>
+          <text class="event-time">{{item.relativeTime}}</text>
+        </view>
+        <text class="event-desc">{{item.description}}</text>
+        <view class="event-location">
+          <text class="location-icon">📍</text>
+          <text class="location-text">{{item.location}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{currentTab === 'report'}}" class="content-section">
+    <view class="report-card">
+      <view class="report-header">
+        <text class="report-title">AI安全分析报告</text>
+        <text class="report-date">{{report && report.date ? report.date : '--'}}</text>
+      </view>
+
+      <view class="score-section">
+        <view class="score-circle">
+          <text class="score-value">{{report && report.safetyScore ? report.safetyScore : '--'}}</text>
+          <text class="score-label">安全评分</text>
+        </view>
+        <view class="score-info">
+          <view class="score-item">
+            <text class="score-num">{{report && report.totalEvents ? report.totalEvents : 0}}</text>
+            <text class="score-name">总事件</text>
+          </view>
+          <view class="score-item">
+            <text class="score-num">{{report && report.resolvedEvents ? report.resolvedEvents : 0}}</text>
+            <text class="score-name">已处理</text>
+          </view>
+          <view class="score-item">
+            <text class="score-num risk-{{report && report.riskLevel ? report.riskLevel : 'low'}}">
+              {{report && report.riskLevel === 'high' ? '高风险' : report && report.riskLevel === 'medium' ? '中风险' : '低风险'}}
+            </text>
+            <text class="score-name">风险等级</text>
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{report && report.behaviorAnalysis}}" class="behavior-section">
+        <text class="behavior-title">行为分析</text>
+        <view class="behavior-grid">
+          <view class="behavior-item">
+            <text class="behavior-value">{{report.behaviorAnalysis.avgSpeed}}</text>
+            <text class="behavior-label">平均速度(km/h)</text>
+          </view>
+          <view class="behavior-item">
+            <text class="behavior-value">{{report.behaviorAnalysis.rideHours}}</text>
+            <text class="behavior-label">骑行时长(h)</text>
+          </view>
+          <view class="behavior-item">
+            <text class="behavior-value">{{report.behaviorAnalysis.brakeCount}}</text>
+            <text class="behavior-label">急刹车次数</text>
+          </view>
+          <view class="behavior-item">
+            <text class="behavior-value">{{report.behaviorAnalysis.accelerationCount}}</text>
+            <text class="behavior-label">急加速次数</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="summary-section">
+        <text class="summary-title">分析摘要</text>
+        <text class="summary-content">{{report && report.summary ? report.summary : '暂无分析数据'}}</text>
+      </view>
+
+      <view class="suggestion-section">
+        <text class="suggestion-title">处置建议</text>
+        <view class="suggestion-list">
+          <view 
+            wx:for="{{report && report.suggestions ? report.suggestions : []}}" 
+            wx:key="index" 
+            class="suggestion-item"
+          >
+            <text class="suggestion-num">{{index + 1}}.</text>
+            <text class="suggestion-text">{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

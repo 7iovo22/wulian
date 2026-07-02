@@ -1,0 +1,21 @@
+{
+  "pages": [
+    "pages/login/index",
+    "pages/index/index",
+    "pages/rider-detail/index",
+    "pages/notification/index"
+  ],
+  "window": {
+    "backgroundColor": "#F0F4F8",
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#4FC3F7",
+    "navigationBarTitleText": "紧急联系人",
+    "navigationBarTextStyle": "white",
+    "enablePullDownRefresh": true
+  },
+  "networkTimeout": {
+    "request": 10000,
+    "downloadFile": 10000
+  },
+  "debug": true
+}

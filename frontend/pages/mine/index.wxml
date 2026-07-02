@@ -3,10 +3,11 @@
     <view class="header-bg"></view>
     <view class="header-content">
       <view class="user-card">
-        <image src="{{userInfo.avatar || 'https://picsum.photos/120/120'}}" mode="aspectFill" class="user-avatar"></image>
+        <image src="{{userInfo && userInfo.avatar ? userInfo.avatar : 'https://picsum.photos/120/120'}}" mode="aspectFill" class="user-avatar"></image>
         <view class="user-info">
-        <view class="user-name">{{userInfo.nickname || '骑手'}}</view>
-        <view class="user-phone" bindtap="editUserInfo">{{userInfo.phone || '请绑定手机号'}}</view>
+        <view class="user-name">{{userInfo && userInfo.nickname ? userInfo.nickname : '骑手'}}</view>
+        <view wx:if="{{userInfo && userInfo.phone}}" class="user-phone">{{maskedPhone}}</view>
+        <view wx:else class="user-phone bind-link" bindtap="goToBindPhone">请绑定手机号</view>
       </view>
         <view class="edit-btn" bindtap="editUserInfo">
           <text class="edit-icon">✏️</text>

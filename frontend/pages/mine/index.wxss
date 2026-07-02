@@ -95,6 +95,11 @@
   font-weight: 500;
 }
 
+.user-phone.bind-link {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
 .edit-btn {
   width: 60rpx;
   height: 60rpx;

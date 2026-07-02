@@ -302,7 +302,7 @@ module.exports = {
             <text class="device-label">剩余电量</text>
             <view class="battery-info">
               <view class="battery-bar">
-                <view class="battery-fill" style="width: {{deviceStatus.batteryLevel || 0}}%;"></view>
+                <view class="battery-fill" style="width: {{deviceStatus && deviceStatus.batteryLevel ? deviceStatus.batteryLevel : 0}}%;"></view>
               </view>
               <text class="battery-text">{{format.formatNumber(deviceStatus.batteryLevel)}}%</text>
             </view>

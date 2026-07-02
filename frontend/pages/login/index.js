@@ -1,11 +1,13 @@
 const app = getApp();
 const api = require('../../utils/api');
 const { isLogEnabled } = require('../../config/index');
+const { generateCode, verifyCode } = require('../../utils/mock-sms');
 
 Page({
   data: {
     phone: '',
     code: '',
+    password: '',
     codeBtnText: '获取验证码',
     codeBtnDisabled: false,
     currentRole: 'rider'
@@ -57,10 +59,24 @@ Page({
     });
   },
 
+  onPasswordInput: function (e) {
+    this.setData({
+      password: e.detail.value
+    });
+  },
+
   switchRole: function (e) {
     const role = e.currentTarget.dataset.role;
     this.setData({
-      currentRole: role
+      currentRole: role,
+      password: '',
+      code: ''
+    });
+  },
+
+  goToRegister: function () {
+    wx.navigateTo({
+      url: '/pages/register/index'
     });
   },
 
@@ -86,6 +102,8 @@ Page({
         wx.hideLoading();
         return;
       }
+
+      const code = generateCode(phone);
 
       wx.hideLoading();
       this.setData({
@@ -116,9 +134,12 @@ Page({
         }
       }, 1000);
 
-      wx.showToast({
+      wx.showModal({
         title: '验证码已发送',
-        icon: 'success'
+        content: `您的验证码是：${code}（有效期5分钟）`,
+        showCancel: false,
+        confirmText: '知道了',
+        confirmColor: '#4FC3F7'
       });
     }, 1000);
   },
@@ -126,7 +147,7 @@ Page({
   login: function () {
     if (!this.isPageActive) return;
 
-    const { phone, code, currentRole } = this.data;
+    const { phone, code, password, currentRole } = this.data;
 
     if (!phone || phone.length !== 11) {
       wx.showToast({
@@ -136,14 +157,35 @@ Page({
       return;
     }
 
-    if (!code || code.length !== 6) {
-      wx.showToast({
-        title: '请输入6位验证码',
-        icon: 'none'
-      });
-      return;
+    if (currentRole === 'rider') {
+      if (!code || code.length !== 6) {
+        wx.showToast({
+          title: '请输入6位验证码',
+          icon: 'none'
+        });
+        return;
+      }
+      this.loginWithCode(phone, code);
+    } else {
+      if (!password || password.length < 6) {
+        wx.showToast({
+          title: '请输入6位以上密码',
+          icon: 'none'
+        });
+        return;
+      }
+      if (password.length > 20) {
+        wx.showToast({
+          title: '密码不能超过20位',
+          icon: 'none'
+        });
+        return;
+      }
+      this.loginWithPassword(phone, password);
     }
+  },
 
+  loginWithCode: function (phone, code) {
     wx.showLoading({
       title: '登录中...',
       mask: true
@@ -155,13 +197,24 @@ Page({
         return;
       }
 
+      const verifyResult = verifyCode(phone, code);
+
+      if (!verifyResult.success) {
+        wx.hideLoading();
+        wx.showToast({
+          title: verifyResult.message,
+          icon: 'none'
+        });
+        return;
+      }
+
       wx.hideLoading();
       const mockUser = {
         id: 1,
         phone: phone,
         nickname: '骑手',
         avatar: '',
-        role: currentRole
+        role: 'rider'
       };
       const mockToken = 'mock_token_' + Date.now();
       app.login(mockUser, mockToken);
@@ -173,12 +226,98 @@ Page({
 
       setTimeout(() => {
         if (this.isPageActive) {
-          wx.switchTab({
-            url: '/pages/index/index'
-          });
+          this.navigateToHome('rider');
         }
       }, 1000);
     }, 1000);
+  },
+
+  loginWithPassword: function (phone, password) {
+    wx.showLoading({
+      title: '登录中...',
+      mask: true
+    });
+
+    api.contact.login({ phone: phone, password: password }).then(res => {
+      if (!this.isPageActive) {
+        wx.hideLoading();
+        return;
+      }
+
+      wx.hideLoading();
+      const { token, ...user } = res;
+      app.login(user, token);
+
+      wx.showToast({
+        title: '登录成功',
+        icon: 'success'
+      });
+
+      setTimeout(() => {
+        if (this.isPageActive) {
+          this.navigateToHome('contact');
+        }
+      }, 1000);
+    }).catch(err => {
+      if (!this.isPageActive) {
+        wx.hideLoading();
+        return;
+      }
+
+      wx.hideLoading();
+      wx.showToast({
+        title: err.message || '登录失败',
+        icon: 'none'
+      });
+    });
+  },
+
+  navigateToHome: function (role) {
+    const homePages = {
+      rider: {
+        url: '/pages/index/index',
+        isTab: true
+      },
+      contact: {
+        url: '/pages/contact-home/index',
+        isTab: false
+      }
+    };
+
+    const page = homePages[role] || homePages.rider;
+
+    const navigate = () => {
+      if (page.isTab) {
+        wx.switchTab({
+          url: page.url,
+          fail: (err) => {
+            console.error('[Login] switchTab fail:', err);
+            wx.reLaunch({
+              url: page.url,
+              fail: () => {
+                wx.showToast({
+                  title: '页面跳转失败',
+                  icon: 'none'
+                });
+              }
+            });
+          }
+        });
+      } else {
+        wx.reLaunch({
+          url: page.url,
+          fail: (err) => {
+            console.error('[Login] reLaunch fail:', err);
+            wx.showToast({
+              title: '页面跳转失败',
+              icon: 'none'
+            });
+          }
+        });
+      }
+    };
+
+    navigate();
   },
 
   wechatLogin: async function () {
@@ -279,9 +418,7 @@ Page({
 
       setTimeout(() => {
         if (this.isPageActive) {
-          wx.switchTab({
-            url: '/pages/index/index'
-          });
+          this.navigateToHome('rider');
         }
       }, 1500);
 

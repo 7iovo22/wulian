@@ -59,7 +59,7 @@ module.exports = {
       <view class="action-list">
         <view 
           class="action-item" 
-          wx:for="{{analysisData.disposalActions || []}}" 
+          wx:for="{{analysisData && analysisData.disposalActions ? analysisData.disposalActions : []}}" 
           wx:key="*this"
         >
           <view class="action-num">{{index + 1}}</view>
@@ -146,7 +146,7 @@ module.exports = {
         <view class="report-section">
           <view class="report-section-title">🚨 安全事件统计</view>
           <view class="event-stats">
-            <view class="event-stat" wx:for="{{analysisData.eventStats || []}}" wx:key="type">
+            <view class="event-stat" wx:for="{{analysisData && analysisData.eventStats ? analysisData.eventStats : []}}" wx:key="type">
               <view class="event-icon">{{item.icon}}</view>
               <view class="event-info">
                 <view class="event-name">{{item.name}}</view>
@@ -159,7 +159,7 @@ module.exports = {
         <view class="report-section">
           <view class="report-section-title">🎯 安全建议</view>
           <view class="suggestion-list">
-            <view class="suggestion-item" wx:for="{{analysisData.safetySuggestions || []}}" wx:key="*this">
+            <view class="suggestion-item" wx:for="{{analysisData && analysisData.safetySuggestions ? analysisData.safetySuggestions : []}}" wx:key="*this">
               <view class="suggestion-dot"></view>
               <view class="suggestion-text">{{item}}</view>
             </view>

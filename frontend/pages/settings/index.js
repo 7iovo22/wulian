@@ -1,4 +1,5 @@
 const api = require('../../utils/api');
+const { generateCode, verifyCode } = require('../../utils/mock-sms');
 
 Page({
   data: {
@@ -174,9 +175,21 @@ Page({
     const userInfo = existing ? JSON.parse(existing) : {};
     const newInfo = {
       ...userInfo,
-      ...this.data.formData
+      phone: this.data.formData.phone,
+      nickname: this.data.formData.nickname || userInfo.nickname,
+      avatar: this.data.formData.avatar || userInfo.avatar,
+      gender: this.data.formData.gender !== undefined ? this.data.formData.gender : userInfo.gender
     };
     wx.setStorageSync('userInfo', JSON.stringify(newInfo));
+
+    const app = getApp();
+    if (app.globalData.userInfo) {
+      app.globalData.userInfo = newInfo;
+    }
+
+    if (console && console.log) {
+      console.log('[Settings] 用户信息已更新:', newInfo);
+    }
   },
 
   onPhoneInput: function (e) {
@@ -202,12 +215,29 @@ Page({
       return;
     }
 
-    this.startCountdown('countdown');
+    if (this.data.countdown > 0) {
+      return;
+    }
 
-    wx.showToast({
-      title: '验证码已发送',
-      icon: 'success'
+    wx.showLoading({
+      title: '发送中...',
+      mask: true
     });
+
+    setTimeout(() => {
+      const code = generateCode(phone);
+
+      wx.hideLoading();
+      this.startCountdown('countdown');
+
+      wx.showModal({
+        title: '验证码已发送',
+        content: `您的验证码是：${code}（有效期5分钟）`,
+        showCancel: false,
+        confirmText: '知道了',
+        confirmColor: '#4FC3F7'
+      });
+    }, 1000);
   },
 
   startCountdown: function (field) {
@@ -241,15 +271,26 @@ Page({
       return;
     }
 
-    if (!code || code.length !== 4) {
+    if (!code || code.length !== 6) {
       wx.showToast({
-        title: '请输入4位验证码',
+        title: '请输入6位验证码',
         icon: 'none'
       });
       return;
     }
 
     wx.showLoading({ title: '绑定中...' });
+
+    const verifyResult = verifyCode(phone, code);
+
+    if (!verifyResult.success) {
+      wx.hideLoading();
+      wx.showToast({
+        title: verifyResult.message,
+        icon: 'none'
+      });
+      return;
+    }
 
     api.user.phoneBind({
       phone,
@@ -262,8 +303,12 @@ Page({
       this.updateUserInfoStorage();
       wx.showToast({
         title: '绑定成功',
-        icon: 'success'
+        icon: 'success',
+        duration: 1500
       });
+      setTimeout(() => {
+        wx.navigateBack();
+      }, 1500);
     }).catch(() => {
       wx.hideLoading();
       this.setData({
@@ -272,8 +317,12 @@ Page({
       this.updateUserInfoStorage();
       wx.showToast({
         title: '绑定成功',
-        icon: 'success'
+        icon: 'success',
+        duration: 1500
       });
+      setTimeout(() => {
+        wx.navigateBack();
+      }, 1500);
     });
   },
 

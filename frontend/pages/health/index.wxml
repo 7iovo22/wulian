@@ -134,7 +134,7 @@ module.exports = {
     </view>
     
     <view class="history-list">
-      <view class="history-item" wx:for="{{historyList || []}}" wx:key="id">
+      <view class="history-item" wx:for="{{historyList ? historyList : []}}" wx:key="id">
         <view class="history-time">{{format.formatTime(item.time)}}</view>
         <view class="history-data">
           <text class="history-heart">心率: {{format.formatNumber(item.heartRate)}}bpm</text>
